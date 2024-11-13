@@ -7,12 +7,17 @@ Do 90 linii to wszyskto jest logowanie
     box-sizing: border-box;
 }
 
-body {
+.body {
     background-color: #EEF4FF;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+}
+
+.mainContent {
+    display: flex;
+    flex-direction: column;
 }
 
 .logIn {
@@ -50,7 +55,7 @@ a {
     color: black;
 }
 
-.SignIn, .RegisterButton, .LoginIn, .ResetPasswd {
+.SignIn, .RegisterButton, .LoginIn, .ResetPasswd, .Dostepnosc, .checkReserv {
     width: 310px;
     height: 40px;
     border-radius: 10px;
@@ -59,6 +64,7 @@ a {
     border: none;
     background-color: #FFBE46;
     transition: .3s;
+    border: 0.5px solid #0C122E;
 }
 
     .SignIn:hover {
@@ -108,19 +114,289 @@ Na dole róznica jedynie w buttonach
     background-color: #0C122E;
 }
 
-.RegisterButton:hover, .ResetPasswd:hover {
+.RegisterButton:hover, .ResetPasswd:hover, .Dostepnosc:hover, .checkReserv:hover {
     background-color: #0C122E;
     color: #FFBE46;
     transition: .2s;
+    border: 0.5px solid #FFBE46;
 }
 
 .LoginIn:hover {
     background-color: #FFBE46;
     color: #0C122E;
     transition: .2s;
+    border: 0.5px solid #FFBE46;
 }
 
 .LoginIn > a {
     text-decoration: none;
     color: #FFBE46;
+}
+
+/* ===================================================
+ADMIN PANEL 
+||||||||||||||||||||
+VVVVVVVVVVVVVVVVVVVV
+=============================================== */
+
+.leftPanel {
+    background-color: white;
+    width: 200px;
+    -webkit-box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
+    box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
+    border-radius: 15px;
+}
+
+.Up {
+    color: #FFBE46;
+    background-color: #0C122E;
+    height: 100px;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Down {
+    height: 700px;
+}
+
+li {
+    list-style: none;
+    padding: 20px;
+}
+
+.adminList {
+    text-decoration: none;
+    color: #0C122E;
+}
+
+    .adminList:hover {
+        color: #FFBE46;
+    }
+
+.adminPanel {
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
+.rightPanel {
+    width: 1600px;
+    height: 700px;
+    background-color: white;
+    padding: 20px;
+    margin: 20px;
+    /* margin-top: 100px; */
+    position: relative;
+    top: 60px;
+    border-radius: 15px;
+    -webkit-box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
+    box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
+    display: flex;
+}
+
+.box {
+    display: flex;
+}
+
+.info {
+    width: 200px;
+    height: 100px;
+    border: 1px solid #0C122E;
+    padding: 30px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.accessible {
+    background-color: #FFBE46;
+    width: 310px;
+    height: 60px;
+    padding: 10px;
+    text-align: center;
+}
+
+.checkRooms {
+    height: 300px;
+    width: 300px;
+}
+
+.flex {
+    display: flex;
+    text-align: center;
+}
+
+.inputChange > input {
+    width: 140px;
+}
+
+.inputChange {
+    width: 150px;
+}
+
+
+.first, .QR {
+    display: flex;
+    gap: 15px;
+}
+
+.second > input {
+    width: 140px;
+}
+
+.roomList {
+    display: flex;
+    background-color: #FFBE46;
+    width: 620px;
+    height: 200px;
+    padding: 30px;
+}
+
+.roomsCheckLeft {
+    width: 50%;
+    padding-left: 50px;
+}
+
+.rooms {
+    padding-left: 50px;
+}
+
+.load, .sendQR, .downloadQR, .openIn, .generateNew {
+    width: 310px;
+    height: 40px;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: none;
+    background-color: #FFBE46;
+    transition: .3s;
+    border: .5px solid #0C122E;
+}
+
+    .load:hover, .sendQR:hover, .downloadQR:hover, .openIn:hover, .generateNew:hover {
+        background-color: #0C122E;
+        color: #FFBE46;
+        transition: .2s;
+        border: 0.5px solid #FFBE46;
+    }
+
+.QrRightSide, .qRLeftSide {
+    display: flex;
+    flex-direction: column;
+}
+
+.QR {
+    margin-top: 20px;
+}
+
+.codeQR {
+    height: 250px;
+    width: 250px;
+    background-color: black;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.qrInput {
+    width: 250px;
+}
+
+/* =====================================
+
+PONIŻEJ STRONA GŁOWNA main
+
+==================================== */
+header {
+    display: flex;
+    justify-content: space-around;
+    background-color: #0C122E;
+    color: #FFBE46;
+    padding: 30px;
+    border-bottom: 4px solid #FFBE46;
+}
+
+.mainList {
+    display: inline;
+    padding: 50px;
+}
+
+.ulMain {
+    margin-top: 20px;
+}
+
+.background {
+    background-image: url("pexels-pixabay-258154.jpg");
+    background-color: #cccccc;
+    height: 820px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.mainReservation {
+    background-color: rgba(0, 0, 51, 0.8);
+    width: 500px;
+    height: 520px;
+    position: relative;
+    left: 1100px;
+    top: 150px;
+    border: 1px solid #FFBE46;
+    color: #FFD700;
+}
+
+.mainForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 20px;
+}
+
+.mainDate {
+    display: flex;
+}
+
+.form-input {
+    border: 1px solid #FFD700;
+    background-color: transparent;
+    color: white;
+    margin: 10px 0;
+    width: 220px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.h1 {
+    color: #FFD700;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.book {
+    background-color: #FFD700;
+    color: #0C122E;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border: 1px solid #0C122E;
+    width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 50px;
+    grid-column: span 2
+}
+
+    .book:hover {
+        background-color: #0C122E;
+        color: #FFD700;
+        border: 1px solid #FFD700;
+    }
+
+.logoSigmy {
+    width: 80px;
 }

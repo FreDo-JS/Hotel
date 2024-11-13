@@ -2,9 +2,9 @@
 
 namespace Hotel.Controllers
 {
-    public class ForgotPasswd : Controller
+    public class ForgotPassword : Controller
     {
-        public IActionResult forgotpasswd()
+        public IActionResult index()
         {
             return View();
         }

@@ -4,7 +4,7 @@ namespace Hotel.Controllers
 {
     public class Login : Controller
     {
-        public IActionResult log()
+        public IActionResult index()
         {
             return View();
         }
