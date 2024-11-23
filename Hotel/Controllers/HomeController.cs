@@ -1,3 +1,4 @@
+using Firebase.Auth;
 using Hotel.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -8,9 +9,12 @@ namespace Hotel.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
+        FirebaseAuthProvider _firebaseAuth;
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            _firebaseAuth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDDOcI0a2y3vNwrwvzzcqHkN0p_JHUvKbI"));
         }
 
         public IActionResult Index()
