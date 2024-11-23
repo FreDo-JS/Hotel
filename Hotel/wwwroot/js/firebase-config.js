@@ -26,12 +26,35 @@ const provider = new firebase.auth.GoogleAuthProvider();
 
 // Funkcja logowania dostępna globalnie
 window.googleLogin = function () {
-    console.log("Funkcja googleLogin wywołana");
     auth.signInWithPopup(provider)
         .then((result) => {
-            // Uzyskane dane o użytkowniku
             const user = result.user;
             console.log('Zalogowano:', user.displayName);
+
+            // Pobierz token identyfikacyjny użytkownika
+            user.getIdToken().then((idToken) => {
+                // Wyślij token do serwera, aby utworzyć sesję
+                fetch('/Account/GoogleLogin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: idToken })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Przekierowanie na stronę główną po pomyślnym utworzeniu sesji
+                            window.location.href = '/Home/Index';
+                        } else {
+                            console.error('Błąd logowania na serwerze:', data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Błąd w komunikacji z serwerem:', error);
+                    });
+            });
+
         })
         .catch((error) => {
             console.error('Błąd logowania:', error);
