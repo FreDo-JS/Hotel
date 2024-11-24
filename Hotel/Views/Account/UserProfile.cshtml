@@ -1,0 +1,25 @@
+﻿@model Dictionary<string, object>
+
+@{
+    ViewData["Title"] = "Profil Użytkownika";
+}
+
+<h2>Profil Użytkownika</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Klucz</th>
+            <th>Wartość</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model)
+        {
+            <tr>
+                <td>@entry.Key</td>
+                <td>@entry.Value</td>
+            </tr>
+        }
+    </tbody>
+</table>

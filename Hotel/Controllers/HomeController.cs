@@ -40,6 +40,10 @@ namespace Hotel.Controllers
         {
             return View();
         }
+        public IActionResult TOMABYCGLOWNA()
+        {
+            return View();
+        }
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

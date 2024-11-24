@@ -21,13 +21,20 @@ public class AccountController : Controller
 
             // Zakładamy, że na podstawie UID tworzymy sesję użytkownika
             HttpContext.Session.SetString("UserId", uid);
-            HttpContext.Session.SetString("UserName", decodedToken.Claims["name"].ToString());
 
-            // Można przechowywać inne dane, np. e-mail
+            // Przechowaj dane użytkownika w sesji
+            if (decodedToken.Claims.ContainsKey("name"))
+            {
+                HttpContext.Session.SetString("UserName", decodedToken.Claims["name"].ToString());
+            }
             if (decodedToken.Claims.ContainsKey("email"))
             {
                 HttpContext.Session.SetString("UserEmail", decodedToken.Claims["email"].ToString());
             }
+
+            // Przechowaj wszystkie dane użytkownika w sesji w formacie JSON
+            var userData = decodedToken.Claims;
+            HttpContext.Session.SetString("UserData", Newtonsoft.Json.JsonConvert.SerializeObject(userData));
 
             return Json(new { success = true });
         }
@@ -37,6 +44,19 @@ public class AccountController : Controller
             Console.WriteLine($"Błąd weryfikacji tokenu: {ex}");
             return Json(new { success = false, message = ex.Message });
         }
+    }
+
+    public IActionResult UserProfile()
+    {
+        // Pobierz dane użytkownika z sesji
+        var userDataJson = HttpContext.Session.GetString("UserData");
+        if (userDataJson == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var userData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(userDataJson);
+        return View(userData);
     }
 
 
