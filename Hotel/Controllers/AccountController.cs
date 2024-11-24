@@ -1,4 +1,5 @@
-﻿using FirebaseAdmin.Auth;
+﻿using FirebaseAdmin;
+using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Mvc;
 
 public class AccountController : Controller
@@ -8,6 +9,12 @@ public class AccountController : Controller
     {
         try
         {
+            // Sprawdzenie, czy FirebaseApp została poprawnie zainicjalizowana
+            if (FirebaseApp.DefaultInstance == null)
+            {
+                return Json(new { success = false, message = "FirebaseApp nie została zainicjalizowana. Upewnij się, że Firebase Admin SDK jest poprawnie skonfigurowane." });
+            }
+
             // Weryfikacja tokenu identyfikacyjnego przy użyciu FirebaseAdmin
             var decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(tokenDto.Token);
             string uid = decodedToken.Uid;
@@ -26,12 +33,16 @@ public class AccountController : Controller
         }
         catch (Exception ex)
         {
+            // Zaloguj pełny komunikat błędu do konsoli
+            Console.WriteLine($"Błąd weryfikacji tokenu: {ex}");
             return Json(new { success = false, message = ex.Message });
         }
     }
-}
 
-public class TokenDto
-{
-    public string Token { get; set; }
+
+
+    public class TokenDto
+    {
+        public string Token { get; set; }
+    }
 }

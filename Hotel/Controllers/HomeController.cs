@@ -1,4 +1,5 @@
 using Firebase.Auth;
+using FirebaseAdmin;
 using Hotel.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -19,6 +20,19 @@ namespace Hotel.Controllers
 
         public IActionResult Index()
         {
+            if (FirebaseApp.DefaultInstance == null)
+            {
+                Console.WriteLine("FirebaseApp nie zosta³o zainicjalizowane.");
+                return Content("FirebaseApp nie zosta³o zainicjalizowane.");
+            }
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
+            {
+                // U¿ytkownik nie jest zalogowany, przekierowanie do logowania
+                return RedirectToAction("", "Login");
+            }
+
+            // U¿ytkownik jest zalogowany, przekazanie danych do widoku
+            ViewBag.UserName = HttpContext.Session.GetString("UserName");
             return View();
         }
 
