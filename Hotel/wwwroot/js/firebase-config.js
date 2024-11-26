@@ -20,6 +20,10 @@ firebase.initializeApp(firebaseConfig);
 // Inicjalizacja Analytics (jeśli jest wymagane)
 firebase.analytics();
 
+
+//db
+const db = firebase.firestore();
+
 // Konfiguracja uwierzytelniania Google
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
