@@ -2,7 +2,7 @@
 
 namespace Hotel.Controllers
 {
-    public class Service : Controller
+    public class RegisterController : Controller
     {
         public IActionResult index()
         {
