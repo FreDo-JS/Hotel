@@ -1,16 +1,28 @@
 ﻿// Przechwytywanie danych formularza rezerwacji i zapisywanie do Firestore
 document.querySelector('.checkReserv').addEventListener('click', function (event) {
-    event.preventDefault(); // Zatrzymuje domyślne działanie przycisku, aby nie odświeżał strony
+    event.preventDefault(); // Zapobiega domyślnej akcji przycisku (odświeżenie strony)
 
     // Pobieranie wartości z formularza rezerwacji
     const imie = document.querySelector('.inputImie').value;
     const nazwisko = document.querySelector('.inputNazwisko').value;
     const liczbaOsob = document.querySelector('.inputLiczbaOsob').value;
     const pokoj = document.querySelector('.inputPokoj').value;
+    const dataPrzyjazdu = document.querySelector('.inputDataPrzyjazdu').value;
+    const dataWyjazdu = document.querySelector('.inputDataWyjazdu').value;
 
     // Sprawdzenie, czy wszystkie wymagane pola są wypełnione
-    if (!imie || !nazwisko || !liczbaOsob || !pokoj) {
+    if (!imie || !nazwisko || !liczbaOsob || !pokoj || !dataPrzyjazdu || !dataWyjazdu) {
         alert("Wszystkie pola są wymagane.");
+        return;
+    }
+
+    // Konwersja dat na obiekty JavaScript Date
+    const przyjazd = new Date(dataPrzyjazdu);
+    const wyjazd = new Date(dataWyjazdu);
+
+    // Sprawdzenie poprawności dat (data wyjazdu musi być późniejsza niż data przyjazdu)
+    if (przyjazd >= wyjazd) {
+        alert("Data wyjazdu musi być późniejsza niż data przyjazdu.");
         return;
     }
 
@@ -20,6 +32,8 @@ document.querySelector('.checkReserv').addEventListener('click', function (event
         nazwisko: nazwisko,
         liczbaOsob: parseInt(liczbaOsob),
         pokoj: parseInt(pokoj),
+        dataPrzyjazdu: firebase.firestore.Timestamp.fromDate(przyjazd),
+        dataWyjazdu: firebase.firestore.Timestamp.fromDate(wyjazd),
         dataRezerwacji: firebase.firestore.Timestamp.now() // Data dodania rezerwacji
     };
 
@@ -34,6 +48,7 @@ document.querySelector('.checkReserv').addEventListener('click', function (event
             alert('Wystąpił błąd przy zapisywaniu rezerwacji. Proszę spróbować ponownie.');
         });
 });
+
 
 
 
