@@ -27,28 +27,33 @@
 
             </div>
 
-            <div class="rightPanel">
-
-                <div class="roomsCheckLeft">
-                    <h2>Sprawdzanie pokoi</h2>
-                    <form action="" class="checkRooms">
-                        <div class="flex">
-                            <div class="inputChange">
-                                <label for="dataPrzyjazdu">Data Przyjazdu</label> <br>
-                                <input type="date" class="dataPrzyjazdu">
-                            </div>
-                            <div class="inputChange">
-                                <label for="dataWyjazdu">Data Wyjazdu</label>
-                                <input type="date" class="dataWyjazdu">
-                            </div>
-                        </div>
-                        <button class="Dostepnosc">Sprawdź dostępność</button>
-
-                        <div class="accessible">
-                            <p>W przedziale DATA jest dostępnych : XX pokoi.</p>
-                        </div>
-                    </form>
+            <form action="" class="checkRooms">
+                <div class="flex">
+                    <div class="inputChange">
+                        <label for="">Data Przyjazdu</label> <br>
+                        <input type="date" class="dataPrzyjazdu">
+                    </div>
+                    <div class="inputChange">
+                        <label for="">Data Wyjazdu</label> <br>
+                        <input type="date" class="dataWyjazdu">
+                    </div>
+                    <div class="inputChange">
+                        <label for="">Piętro</label> <br>
+                        <select class="pietro">
+                            <option value="">Wszystkie</option>
+                            <option value="parter">Parter</option>
+                            <option value="1">1 Piętro</option>
+                            <option value="2">2 Piętro</option>
+                        </select>
+                    </div>
                 </div>
+                <button class="Dostepnosc">Sprawdź dostępność</button>
+
+                <div class="accessible">
+                    <p>W przedziale DATA jest dostępnych : XX pokoi.</p>
+                </div>
+            </form>
+
 
                     <h2>Rezerwacja</h2>
 

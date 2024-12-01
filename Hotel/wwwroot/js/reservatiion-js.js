@@ -1,4 +1,28 @@
 ﻿// Przechwytywanie danych formularza rezerwacji i zapisywanie do Firestore
+const pokoje = [
+    { numer: '001', pietro: 'parter', liczbaOsob: 2, status: 'wolny', rezerwujacy: null },
+    { numer: '002', pietro: 'parter', liczbaOsob: 4, status: 'wolny', rezerwujacy: null },
+    // Dodać pozostałe pokoje dla parteru, 1 piętra, 2 piętra
+    { numer: '101', pietro: '1', liczbaOsob: 3, status: 'wolny', rezerwujacy: null },
+    { numer: '102', pietro: '1', liczbaOsob: 2, status: 'wolny', rezerwujacy: null },
+    // ...
+    { numer: '201', pietro: '2', liczbaOsob: 4, status: 'wolny', rezerwujacy: null },
+    { numer: '202', pietro: '2', liczbaOsob: 3, status: 'wolny', rezerwujacy: null },
+    // Dodać wszystkie pokoje
+];
+
+pokoje.forEach((pokoj) => {
+    db.collection('pokoje')
+        .doc(pokoj.numer)
+        .set(pokoj)
+        .then(() => {
+            console.log(`Dodano pokój ${pokoj.numer}`);
+        })
+        .catch((error) => {
+            console.error(`Błąd przy dodawaniu pokoju ${pokoj.numer}:`, error);
+        });
+});
+
 document.querySelector('.checkReserv').addEventListener('click', function (event) {
     event.preventDefault(); // Zapobiega domyślnej akcji przycisku (odświeżenie strony)
 
@@ -10,42 +34,58 @@ document.querySelector('.checkReserv').addEventListener('click', function (event
     const dataPrzyjazdu = document.querySelector('.inputDataPrzyjazdu').value;
     const dataWyjazdu = document.querySelector('.inputDataWyjazdu').value;
 
-    // Sprawdzenie, czy wszystkie wymagane pola są wypełnione
     if (!imie || !nazwisko || !liczbaOsob || !pokoj || !dataPrzyjazdu || !dataWyjazdu) {
         alert("Wszystkie pola są wymagane.");
         return;
     }
 
-    // Konwersja dat na obiekty JavaScript Date
     const przyjazd = new Date(dataPrzyjazdu);
     const wyjazd = new Date(dataWyjazdu);
 
-    // Sprawdzenie poprawności dat (data wyjazdu musi być późniejsza niż data przyjazdu)
     if (przyjazd >= wyjazd) {
         alert("Data wyjazdu musi być późniejsza niż data przyjazdu.");
         return;
     }
 
-    // Tworzenie obiektu rezerwacji
-    const reservation = {
-        imie: imie,
-        nazwisko: nazwisko,
-        liczbaOsob: parseInt(liczbaOsob),
-        pokoj: parseInt(pokoj),
-        dataPrzyjazdu: firebase.firestore.Timestamp.fromDate(przyjazd),
-        dataWyjazdu: firebase.firestore.Timestamp.fromDate(wyjazd),
-        dataRezerwacji: firebase.firestore.Timestamp.now() // Data dodania rezerwacji
-    };
+    // Sprawdzenie, czy pokój jest wolny
+    db.collection('pokoje')
+        .doc(pokoj)
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                const pokojData = doc.data();
 
-    // Dodanie dokumentu do kolekcji 'rezerwacje' w Firestore
-    db.collection('rezerwacje')
-        .add(reservation)
-        .then(() => {
-            alert('Rezerwacja została zapisana pomyślnie!');
+                if (pokojData.status === 'wolny') {
+                    // Pokój jest wolny, więc dokonujemy rezerwacji
+                    db.collection('pokoje')
+                        .doc(pokoj)
+                        .update({
+                            status: 'zajęty',
+                            rezerwujacy: {
+                                imie: imie,
+                                nazwisko: nazwisko,
+                                liczbaOsob: parseInt(liczbaOsob),
+                                dataPrzyjazdu: firebase.firestore.Timestamp.fromDate(przyjazd),
+                                dataWyjazdu: firebase.firestore.Timestamp.fromDate(wyjazd),
+                            }
+                        })
+                        .then(() => {
+                            alert('Rezerwacja została zapisana pomyślnie!');
+                        })
+                        .catch((error) => {
+                            console.error('Błąd przy zapisywaniu rezerwacji:', error);
+                            alert('Wystąpił błąd przy zapisywaniu rezerwacji. Proszę spróbować ponownie.');
+                        });
+                } else {
+                    alert('Pokój jest już zajęty. Proszę wybrać inny pokój.');
+                }
+            } else {
+                alert('Podany pokój nie istnieje.');
+            }
         })
         .catch((error) => {
-            console.error('Błąd przy zapisywaniu rezerwacji:', error);
-            alert('Wystąpił błąd przy zapisywaniu rezerwacji. Proszę spróbować ponownie.');
+            console.error('Błąd przy sprawdzaniu dostępności pokoju:', error);
+            alert('Wystąpił błąd przy sprawdzaniu dostępności. Proszę spróbować ponownie.');
         });
 });
 
@@ -69,18 +109,38 @@ document.querySelector('.Dostepnosc').addEventListener('click', function (event)
     const przyjazd = new Date(dataPrzyjazdu);
     const wyjazd = new Date(dataWyjazdu);
 
-    // Pobieranie rezerwacji z Firestore w określonym przedziale czasowym
-    db.collection('rezerwacje')
-        .where('dataRezerwacji', '>=', firebase.firestore.Timestamp.fromDate(przyjazd))
-        .where('dataRezerwacji', '<=', firebase.firestore.Timestamp.fromDate(wyjazd))
+    // Pobieranie danych o pokojach z Firestore
+    db.collection('pokoje')
         .get()
         .then((querySnapshot) => {
-            // Obliczenie liczby dostępnych pokoi
-            const iloscRezerwacji = querySnapshot.size;
-            const wolnePokoje = 50 - iloscRezerwacji; // Zakładamy, że hotel ma 50 pokoi
+            let wolnePokoje = [];
+
+            querySnapshot.forEach((doc) => {
+                const pokojData = doc.data();
+
+                if (pokojData.status === 'wolny') {
+                    // Pokój jest wolny
+                    wolnePokoje.push(pokojData.numer);
+                } else {
+                    // Pokój jest zajęty - sprawdzamy, czy terminy rezerwacji nie pokrywają się
+                    const dataPrzyjazduZarezerwowana = pokojData.rezerwujacy?.dataPrzyjazdu?.toDate();
+                    const dataWyjazduZarezerwowana = pokojData.rezerwujacy?.dataWyjazdu?.toDate();
+
+                    if (dataPrzyjazduZarezerwowana && dataWyjazduZarezerwowana) {
+                        if (wyjazd <= dataPrzyjazduZarezerwowana || przyjazd >= dataWyjazduZarezerwowana) {
+                            // Terminy się nie pokrywają - pokój jest wolny w wybranym terminie
+                            wolnePokoje.push(pokojData.numer);
+                        }
+                    }
+                }
+            });
 
             // Wyświetlenie informacji o dostępnych pokojach
-            document.querySelector('.accessible p').textContent = `W przedziale ${dataPrzyjazdu} - ${dataWyjazdu} jest dostępnych ${wolnePokoje} pokoi.`;
+            if (wolnePokoje.length > 0) {
+                document.querySelector('.accessible p').textContent = `W przedziale ${dataPrzyjazdu} - ${dataWyjazdu} są dostępne pokoje: ${wolnePokoje.join(', ')}.`;
+            } else {
+                document.querySelector('.accessible p').textContent = `W przedziale ${dataPrzyjazdu} - ${dataWyjazdu} nie ma dostępnych pokojów.`;
+            }
         })
         .catch((error) => {
             console.error('Błąd przy sprawdzaniu dostępności:', error);
