@@ -11,12 +11,7 @@ namespace Hotel.Controllers
 {
     public class ServiceController : Controller
     {
-        private readonly FirestoreDb _firestoreDb;
 
-        public ServiceController(FirestoreDb firestoreDb)
-        {
-            _firestoreDb = firestoreDb;
-        }
         [HttpGet]
         public IActionResult Index()
         {
