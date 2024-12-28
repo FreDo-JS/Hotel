@@ -146,7 +146,7 @@ VVVVVVVVVVVVVVVVVVVV
     flex-direction: column;
     justify-content: space-between;
 }
-}
+
 
 .Up {
     color: #FFBE46;
@@ -188,7 +188,7 @@ li {
     padding: 20px;
     overflow: auto;
 }
-}
+
 
 .box {
     display: flex;
