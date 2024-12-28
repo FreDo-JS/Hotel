@@ -6,9 +6,9 @@ namespace Hotel.Models
     {
         [Required]
         [EmailAddress]
-        public string EmailAddress { get; set; }
+        public string? EmailAddress { get; set; }
         [Required]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
     }
 }

@@ -97,10 +97,10 @@ namespace Hotel.Controllers
     // DTO dla rezerwacji
     public class RezerwacjaDto
     {
-        public string Imie { get; set; }
-        public string Nazwisko { get; set; }
+        public string? Imie { get; set; }
+        public string? Nazwisko { get; set; }
         public int LiczbaOsob { get; set; }
-        public string Pokoj { get; set; }
+        public string? Pokoj { get; set; }
         public DateTime DataPrzyjazdu { get; set; }
         public DateTime DataWyjazdu { get; set; }
     }
