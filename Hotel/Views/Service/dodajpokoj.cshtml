@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Hotel.Data.Room>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodaj Pokój</title>
+</head>
+<body>
+    <h1>Dodaj Pokój</h1>
+
+    <!-- Formularz dodawania nowego pokoju -->
+    <form asp-action="DodajPokoj" method="post">
+        <label for="RoomNumber">Numer pokoju:</label>
+        <input type="number" id="RoomNumber" name="RoomNumber" required /><br />
+
+        <label for="Floor">Piętro:</label>
+        <input type="number" id="Floor" name="Floor" required /><br />
+
+        <label for="Status">Status:</label>
+        <select id="Status" name="Status" required>
+            <option value="wolny">Wolny</option>
+            <option value="zajęty">Zajęty</option>
+        </select><br />
+
+        <button type="submit">Dodaj Pokój</button>
+    </form>
+
+    <hr />
+
+    <!-- Lista wszystkich pokoi -->
+    <h2>Lista Pokoi</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Numer</th>
+                <th>Piętro</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var room in Model)
+            {
+                <tr>
+                    <td>@room.RoomNumber</td>
+                    <td>@room.Floor</td>
+                    <td>@room.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

@@ -33,12 +33,19 @@ var connectionString = builder.Configuration.GetConnectionString("MySqlConnectio
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 // Rejestracja Identity z u¿yciem bazy danych
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<HotelDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString)); // Jeœli u¿ywasz SQL Server
 
 // Rejestracja kontrolerów
 builder.Services.AddControllersWithViews();

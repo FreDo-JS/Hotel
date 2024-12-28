@@ -6,16 +6,44 @@ using QRCoder;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Hotel.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Controllers
 {
     public class ServiceController : Controller
     {
-
+        private readonly HotelDbContext _context;
+        public ServiceController(HotelDbContext context)
+        {
+            _context = context;
+        }
         [HttpGet]
         public IActionResult Index()
         {
             return View(); // Dodaje widok Index.cshtml dla tego kontrolera
+        }
+        // Wyświetlenie strony dodaj_pokoj.cshtml
+        [HttpGet]
+        public async Task<IActionResult> DodajPokoj()
+        {
+            var rooms = await _context.Rooms.ToListAsync();
+            return View(rooms);
+        }
+
+        // Dodanie nowego pokoju
+        [HttpPost]
+        public async Task<IActionResult> DodajPokoj(Room room)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Rooms.Add(room);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(DodajPokoj)); // Powrót do widoku po dodaniu
+            }
+
+            var rooms = await _context.Rooms.ToListAsync();
+            return View(rooms);
         }
 
         [HttpPost]
