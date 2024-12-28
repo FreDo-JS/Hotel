@@ -1,6 +1,7 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Hotel.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,9 +29,16 @@ else
 }
 
 // Konfiguracja MySQL
-var connectionString = builder.Configuration.GetConnectionString("MySqlConnection");
-builder.Services.AddDbContext<HotelDbContext>(options =>
+var connectionString = builder.Configuration.GetConnectionString("MySqlConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+// Rejestracja Identity z u¿yciem bazy danych
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 // Rejestracja kontrolerów
 builder.Services.AddControllersWithViews();
