@@ -1,4 +1,4 @@
-﻿// firebase-config.js (wersja Firebase 8.x)
+﻿//firebase-config.js (wersja Firebase 8.x)
 
 // Sprawdź, czy skrypt się ładuje
 console.log("Plik firebase-config.js załadowany");
@@ -19,6 +19,10 @@ firebase.initializeApp(firebaseConfig);
 
 // Inicjalizacja Analytics (jeśli jest wymagane)
 firebase.analytics();
+
+
+//db
+const db = firebase.firestore();
 
 // Konfiguracja uwierzytelniania Google
 const auth = firebase.auth();

@@ -1,9 +1,18 @@
 ﻿using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Mvc;
+using Hotel.Data;
+using Microsoft.EntityFrameworkCore;
 
 public class AccountController : Controller
 {
+    private readonly HotelDbContext _context;
+
+    public AccountController(HotelDbContext context)
+    {
+        _context = context;
+    }
+
     [HttpPost]
     public async Task<IActionResult> GoogleLogin([FromBody] TokenDto tokenDto)
     {
@@ -19,17 +28,40 @@ public class AccountController : Controller
             var decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(tokenDto.Token);
             string uid = decodedToken.Uid;
 
+            // Pobierz dane użytkownika z tokenu
+            var email = decodedToken.Claims.ContainsKey("email") ? decodedToken.Claims["email"].ToString() : null;
+            var name = decodedToken.Claims.ContainsKey("name") ? decodedToken.Claims["name"].ToString() : "Unknown User";
+
+            // Sprawdź, czy użytkownik już istnieje w bazie danych
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.FirebaseUid == uid);
+
+            if (existingUser == null)
+            {
+                // Dodaj nowego użytkownika do bazy danych
+                var newUser = new User
+                {
+                    FirebaseUid = uid,
+                    Email = email,
+                    Name = name,
+                    Role = "rezydent", // Domyślna rola
+                    CreatedAt = DateTime.Now
+                };
+
+                _context.Users.Add(newUser);
+                await _context.SaveChangesAsync();
+            }
+
             // Zakładamy, że na podstawie UID tworzymy sesję użytkownika
             HttpContext.Session.SetString("UserId", uid);
 
             // Przechowaj dane użytkownika w sesji
-            if (decodedToken.Claims.ContainsKey("name"))
+            if (!string.IsNullOrEmpty(name))
             {
-                HttpContext.Session.SetString("UserName", decodedToken.Claims["name"].ToString());
+                HttpContext.Session.SetString("UserName", name);
             }
-            if (decodedToken.Claims.ContainsKey("email"))
+            if (!string.IsNullOrEmpty(email))
             {
-                HttpContext.Session.SetString("UserEmail", decodedToken.Claims["email"].ToString());
+                HttpContext.Session.SetString("UserEmail", email);
             }
 
             // Przechowaj wszystkie dane użytkownika w sesji w formacie JSON
@@ -59,10 +91,8 @@ public class AccountController : Controller
         return View(userData);
     }
 
-
-
     public class TokenDto
     {
-        public string Token { get; set; }
+        public string? Token { get; set; }
     }
 }
