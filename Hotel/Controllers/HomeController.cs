@@ -42,8 +42,17 @@ namespace Hotel.Controllers
         }
         public IActionResult TOMABYCGLOWNA()
         {
+            // Pobranie danych u¿ytkownika z sesji
+            string userName = HttpContext.Session.GetString("UserName") ?? "Goœæ";
+            string userSurname = HttpContext.Session.GetString("UserEmail") ?? "";
+
+            // Przekazanie danych do widoku
+            ViewBag.UserName = userName;
+            ViewBag.UserSurname = userSurname;
+
             return View();
         }
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

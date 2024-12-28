@@ -7,15 +7,14 @@
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 </head>
 <body class="adminPanel">
-    <main>
+    <main class="main-container">
         <div class="box">
-            <div class="leftPanel">
+            <!-- Lewy panel -->
+            <aside class="leftPanel">
                 <div class="Up">
-
-                    <img src="~/css/ss.png" alt="" class="logoSigmy">
-
+                    <img src="~/img/ss.png" alt="Logo SS-IGMA" class="logoSigmy">
                 </div>
-                <div class="Down">
+                <nav class="Down">
                     <ul>
                         <li><a href="" class="adminList">Dashboard</a></li>
                         <li><a href="" class="adminList">Main Menu</a></li>
@@ -23,80 +22,77 @@
                         <li><a href="" class="adminList">Booking</a></li>
                         <li><a href="" class="adminList">Baza danych</a></li>
                     </ul>
-                </div>
+                </nav>
+            </aside>
 
-            </div>
-
-            <form action="" class="checkRooms">
-                <div class="flex">
-                    <div class="inputChange">
-                        <label for="">Data Przyjazdu</label> <br>
-                        <input type="date" class="dataPrzyjazdu">
+            <!-- Prawy panel -->
+            <section class="rightPanel">
+                <!-- Formularz dostępności -->
+                <form action="" class="checkRooms">
+                    <div class="flex">
+                        <div class="inputChange">
+                            <label for="dataPrzyjazdu">Data Przyjazdu</label>
+                            <input type="date" id="dataPrzyjazdu" class="dataPrzyjazdu">
+                        </div>
+                        <div class="inputChange">
+                            <label for="dataWyjazdu">Data Wyjazdu</label>
+                            <input type="date" id="dataWyjazdu" class="dataWyjazdu">
+                        </div>
+                        <div class="inputChange">
+                            <label for="pietro">Piętro</label>
+                            <select id="pietro" class="pietro">
+                                <option value="">Wszystkie</option>
+                                <option value="parter">Parter</option>
+                                <option value="1">1 Piętro</option>
+                                <option value="2">2 Piętro</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="inputChange">
-                        <label for="">Data Wyjazdu</label> <br>
-                        <input type="date" class="dataWyjazdu">
+                    <button class="Dostepnosc">Sprawdź dostępność</button>
+                    <div class="accessible">
+                        <p>W przedziale DATA jest dostępnych : XX pokoi.</p>
                     </div>
-                    <div class="inputChange">
-                        <label for="">Piętro</label> <br>
-                        <select class="pietro">
-                            <option value="">Wszystkie</option>
-                            <option value="parter">Parter</option>
-                            <option value="1">1 Piętro</option>
-                            <option value="2">2 Piętro</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="Dostepnosc">Sprawdź dostępność</button>
+                </form>
 
-                <div class="accessible">
-                    <p>W przedziale DATA jest dostępnych : XX pokoi.</p>
-                </div>
-            </form>
-
-
+                <!-- Sekcja rezerwacji -->
+                <section class="reservation">
                     <h2>Rezerwacja</h2>
-
                     <form action="" class="checkReservation">
                         <div class="first">
                             <div class="second">
-                                <label for="">Imię</label> <br>
-                                <input type="text" class="inputImie"> <br>
+                                <label for="inputImie">Imię</label>
+                                <input type="text" id="inputImie" class="inputImie">
                             </div>
                             <div class="second">
-                                <label for="">Nazwisko</label> <br>
-                                <input type="text" class="inputNazwisko">
+                                <label for="inputNazwisko">Nazwisko</label>
+                                <input type="text" id="inputNazwisko" class="inputNazwisko">
                             </div>
                         </div>
                         <div class="first">
                             <div class="second">
-                                <label for="">Liczba osób</label> <br>
-                                <input type="number" class="inputLiczbaOsob"> <br>
+                                <label for="inputLiczbaOsob">Liczba osób</label>
+                                <input type="number" id="inputLiczbaOsob" class="inputLiczbaOsob">
                             </div>
                             <div class="second">
-                                <label for="">Pokój</label> <br>
-                                <input type="number" class="inputPokoj">
+                                <label for="inputPokoj">Pokój</label>
+                                <input type="number" id="inputPokoj" class="inputPokoj">
                             </div>
+                        </div>
                         <div class="first">
                             <div class="second">
-                                <label for="">Data Przyjazdu</label> <br>
-                                <input type="date" class="inputDataPrzyjazdu"> <br>
+                                <label for="inputDataPrzyjazdu">Data Przyjazdu</label>
+                                <input type="date" id="inputDataPrzyjazdu" class="inputDataPrzyjazdu">
                             </div>
                             <div class="second">
-                                <label for="">Data Wyjazdu</label> <br>
-                                <input type="date" class="inputDataWyjazdu">
+                                <label for="inputDataWyjazdu">Data Wyjazdu</label>
+                                <input type="date" id="inputDataWyjazdu" class="inputDataWyjazdu">
                             </div>
                         </div>
                         <button class="checkReserv">Zarezerwuj pokój</button>
                     </form>
+                </section>
 
-
-
-
-
-
-                </div>
-
+                <!-- Lista pokoi -->
                 <div class="roomsCheckRight">
                     <div class="roomList">
                         <div class="floor">
@@ -112,14 +108,14 @@
                             <span>101, </span><span>102, </span><span>103</span>
                         </div>
                     </div>
+
+                    <!-- Sekcja kodów QR -->
                     <div class="QR">
                         <div class="qRLeftSide">
-                            <label for="">Pokój</label>
-                            <input type="number" class="qrInput">
-                            <br>
-                            <label for="">Adres mailowy</label>
-                            <input type="email" class="qrInput">
-
+                            <label for="qrPokoj">Pokój</label>
+                            <input type="number" id="qrPokoj" class="qrInput">
+                            <label for="qrEmail">Adres mailowy</label>
+                            <input type="email" id="qrEmail" class="qrInput">
                             <div class="codeQR">
                                 Tu kod qr okok?
                             </div>
@@ -130,16 +126,10 @@
                             <button class="downloadQR">POBIERZ KOD QR</button>
                             <button class="openIn">OTWÓRZ W KARCIE</button>
                             <button class="generateNew">WYGENERUJ NOWY</button>
-
-
-
                         </div>
                     </div>
                 </div>
-
-            </div>
-
-
+            </section>
         </div>
     </main>
 </body>

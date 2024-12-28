@@ -1,4 +1,4 @@
-﻿// firebase-config.js (wersja Firebase 8.x)
+﻿//firebase-config.js (wersja Firebase 8.x)
 
 // Sprawdź, czy skrypt się ładuje
 console.log("Plik firebase-config.js załadowany");

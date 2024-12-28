@@ -1,29 +1,4 @@
-﻿// Przechwytywanie danych formularza rezerwacji i zapisywanie do Firestore
-const pokoje = [
-    { numer: '001', pietro: 'parter', liczbaOsob: 2, status: 'wolny', rezerwujacy: null },
-    { numer: '002', pietro: 'parter', liczbaOsob: 4, status: 'wolny', rezerwujacy: null },
-    // Dodać pozostałe pokoje dla parteru, 1 piętra, 2 piętra
-    { numer: '101', pietro: '1', liczbaOsob: 3, status: 'wolny', rezerwujacy: null },
-    { numer: '102', pietro: '1', liczbaOsob: 2, status: 'wolny', rezerwujacy: null },
-    // ...
-    { numer: '201', pietro: '2', liczbaOsob: 4, status: 'wolny', rezerwujacy: null },
-    { numer: '202', pietro: '2', liczbaOsob: 3, status: 'wolny', rezerwujacy: null },
-    // Dodać wszystkie pokoje
-];
-
-pokoje.forEach((pokoj) => {
-    db.collection('pokoje')
-        .doc(pokoj.numer)
-        .set(pokoj)
-        .then(() => {
-            console.log(`Dodano pokój ${pokoj.numer}`);
-        })
-        .catch((error) => {
-            console.error(`Błąd przy dodawaniu pokoju ${pokoj.numer}:`, error);
-        });
-});
-
-document.querySelector('.checkReserv').addEventListener('click', function (event) {
+﻿document.querySelector('.checkReserv').addEventListener('click', function (event) {
     event.preventDefault(); // Zapobiega domyślnej akcji przycisku (odświeżenie strony)
 
     // Pobieranie wartości z formularza rezerwacji
@@ -47,45 +22,34 @@ document.querySelector('.checkReserv').addEventListener('click', function (event
         return;
     }
 
-    // Sprawdzenie, czy pokój jest wolny
-    db.collection('pokoje')
-        .doc(pokoj)
-        .get()
-        .then((doc) => {
-            if (doc.exists) {
-                const pokojData = doc.data();
-
-                if (pokojData.status === 'wolny') {
-                    // Pokój jest wolny, więc dokonujemy rezerwacji
-                    db.collection('pokoje')
-                        .doc(pokoj)
-                        .update({
-                            status: 'zajęty',
-                            rezerwujacy: {
-                                imie: imie,
-                                nazwisko: nazwisko,
-                                liczbaOsob: parseInt(liczbaOsob),
-                                dataPrzyjazdu: firebase.firestore.Timestamp.fromDate(przyjazd),
-                                dataWyjazdu: firebase.firestore.Timestamp.fromDate(wyjazd),
-                            }
-                        })
-                        .then(() => {
-                            alert('Rezerwacja została zapisana pomyślnie!');
-                        })
-                        .catch((error) => {
-                            console.error('Błąd przy zapisywaniu rezerwacji:', error);
-                            alert('Wystąpił błąd przy zapisywaniu rezerwacji. Proszę spróbować ponownie.');
-                        });
-                } else {
-                    alert('Pokój jest już zajęty. Proszę wybrać inny pokój.');
-                }
+    // Wysłanie danych do kontrolera serwera (ServiceController)
+    fetch('/Service/ZarezerwujPokoj', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            imie: imie,
+            nazwisko: nazwisko,
+            liczbaOsob: parseInt(liczbaOsob),
+            pokoj: pokoj,
+            dataPrzyjazdu: dataPrzyjazdu,
+            dataWyjazdu: dataWyjazdu
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Jeśli rezerwacja się powiodła, wyświetl kod QR
+                alert("Rezerwacja zakończona pomyślnie! Sprawdź kod QR.");
+                document.querySelector('.codeQR').innerHTML = `<img src="${data.kodQRUrl}" alt="Kod QR dla pokoju">`;
             } else {
-                alert('Podany pokój nie istnieje.');
+                alert(`Błąd rezerwacji: ${data.message}`);
             }
         })
         .catch((error) => {
-            console.error('Błąd przy sprawdzaniu dostępności pokoju:', error);
-            alert('Wystąpił błąd przy sprawdzaniu dostępności. Proszę spróbować ponownie.');
+            console.error('Błąd w komunikacji z serwerem:', error);
+            alert('Wystąpił błąd podczas rezerwacji. Proszę spróbować ponownie.');
         });
 });
 

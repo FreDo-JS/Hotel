@@ -139,13 +139,13 @@ ADMIN PANEL
 VVVVVVVVVVVVVVVVVVVV
 =============================================== */
 
+
 .leftPanel {
-    background-color: white;
-    width: 200px;
-    -webkit-box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
-    -moz-box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
-    box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
-    border-radius: 15px;
+    flex: 0 0 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 }
 
 .Up {
@@ -173,33 +173,27 @@ li {
     color: #0C122E;
 }
 
-    .adminList:hover {
+.adminList:hover {
         color: #FFBE46;
-    }
+}
 
 .adminPanel {
     justify-content: flex-start;
     padding-left: 20px;
 }
 
+
 .rightPanel {
-    width: 1600px;
-    height: 700px;
-    background-color: white;
+    flex: 1;
     padding: 20px;
-    margin: 20px;
-    /* margin-top: 100px; */
-    position: relative;
-    top: 60px;
-    border-radius: 15px;
-    -webkit-box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
-    -moz-box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
-    box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
-    display: flex;
+    overflow: auto;
+}
 }
 
 .box {
     display: flex;
+    gap: 20px;
+    padding: 20px;
 }
 
 .info {
@@ -212,21 +206,29 @@ li {
 }
 
 .accessible {
+    margin-top: 20px;
+    padding: 15px;
     background-color: #FFBE46;
-    width: 310px;
-    height: 60px;
-    padding: 10px;
-    text-align: center;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
 }
 
-.checkRooms {
-    height: 300px;
-    width: 300px;
+
+.checkRooms, .checkReservation {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
+
 
 .flex {
     display: flex;
-    text-align: center;
+    justify-content: space-between;
 }
 
 .inputChange > input {
@@ -399,4 +401,12 @@ header {
 
 .logoSigmy {
     width: 80px;
+}
+.user-info {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
 }
