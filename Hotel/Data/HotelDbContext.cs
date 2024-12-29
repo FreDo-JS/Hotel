@@ -16,6 +16,7 @@ namespace Hotel.Data
         public DbSet<RoomStatistic> RoomStatistics { get; set; }
 
         public DbSet<Reservation> Reservations { get; set; } // Dodanie tabeli rezerwacji
+       
     }
 
     // Model dla tabeli Users

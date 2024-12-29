@@ -61,6 +61,7 @@ document.getElementById("checkAvailabilityButton").addEventListener("click", asy
     const checkOutDate = document.getElementById("dataWyjazdu").value;
     const floor = document.getElementById("pietro").value;
     const resultElement = document.getElementById("availabilityResult");
+    const roomDetailsElement = document.getElementById("roomDetails");
 
     // Walidacja formularza
     if (!checkInDate || !checkOutDate) {
@@ -86,8 +87,29 @@ document.getElementById("checkAvailabilityButton").addEventListener("click", asy
         const data = await response.json();
 
         if (response.ok && data.success) {
-            resultElement.textContent = `W przedziale ${checkInDate} - ${checkOutDate} jest dostępnych ${data.availableRooms} pokoi.`;
+            resultElement.textContent = "Poniżej szczegóły dostępności pokoi:";
             resultElement.style.color = "green";
+
+            // Wyświetlanie szczegółów pokoi
+            roomDetailsElement.innerHTML = ""; // Wyczyść poprzednie wyniki
+            data.rooms.forEach(room => {
+                const roomStatus = room.status === "wolny" ? "green" : "red";
+                const roomElement = document.createElement("div");
+                roomElement.style.color = roomStatus;
+                roomElement.innerHTML = `<strong>Pokój ${room.roomNumber}:</strong> ${room.status}`;
+
+                if (room.status === "zajęty") {
+                    roomElement.innerHTML += `<br>Szczegóły rezerwacji:`;
+                    room.reservationDetails.forEach(detail => {
+                        roomElement.innerHTML += `
+                            <br>- Użytkownik: ${detail.userName || "Nieznany"} ${detail.userLastName || ""}
+                            <br>- Termin: ${detail.checkInDate} - ${detail.checkOutDate}
+                        `;
+                    });
+                }
+
+                roomDetailsElement.appendChild(roomElement);
+            });
         } else {
             resultElement.textContent = data.message || "Wystąpił błąd podczas sprawdzania dostępności.";
             resultElement.style.color = "red";
@@ -98,5 +120,6 @@ document.getElementById("checkAvailabilityButton").addEventListener("click", asy
         resultElement.style.color = "red";
     }
 });
+
 
 

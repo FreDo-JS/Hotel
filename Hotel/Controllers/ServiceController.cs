@@ -108,27 +108,41 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Data wyjazdu musi być późniejsza niż data przyjazdu." });
             }
 
-            // Pobierz pokoje na danym piętrze lub wszystkie
+            // Pobierz wszystkie pokoje na danym piętrze lub wszystkie piętra
             var roomsQuery = _context.Rooms.AsQueryable();
-
             if (!string.IsNullOrEmpty(request.Floor))
             {
                 roomsQuery = roomsQuery.Where(r => r.Floor.ToString() == request.Floor);
             }
 
+            var rooms = await roomsQuery.ToListAsync();
+
             // Pobierz zajęte pokoje w wybranym przedziale dat
-            var occupiedRoomIds = await _context.Reservations
+            var reservations = await _context.Reservations
                 .Where(r => r.CheckInDate < request.CheckOutDate && r.CheckOutDate > request.CheckInDate)
-                .Select(r => r.RoomId)
+                .Include(r => r.User) // Dołącz dane użytkownika
                 .ToListAsync();
 
-            // Filtruj dostępne pokoje
-            var availableRooms = await roomsQuery
-                .Where(r => !occupiedRoomIds.Contains(r.Id))
-                .CountAsync();
+            var result = rooms.Select(room => new
+            {
+                RoomNumber = room.RoomNumber,
+                Status = reservations.Any(res => res.RoomId == room.Id) ? "zajęty" : "wolny",
+                ReservationDetails = reservations
+                    .Where(res => res.RoomId == room.Id)
+                    .Select(res => new
+                    {
+                        UserName = res.User.Name,
+                        UserLastName = res.LastName,
+                        CheckInDate = res.CheckInDate.ToString("yyyy-MM-dd"),
+                        CheckOutDate = res.CheckOutDate.ToString("yyyy-MM-dd")
+                    })
+            }).ToList();
 
-            return Json(new { success = true, availableRooms });
+            return Json(new { success = true, rooms = result });
         }
+
+       
+
 
         public class AvailabilityRequestDto
         {
