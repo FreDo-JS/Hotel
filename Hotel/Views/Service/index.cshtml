@@ -28,31 +28,32 @@
             <!-- Prawy panel -->
             <section class="rightPanel">
                 <!-- Formularz dostępności -->
-                <form action="" class="checkRooms">
+                <form id="checkAvailabilityForm" class="checkRooms">
                     <div class="flex">
                         <div class="inputChange">
                             <label for="dataPrzyjazdu">Data Przyjazdu</label>
-                            <input type="date" id="dataPrzyjazdu" class="dataPrzyjazdu">
+                            <input type="date" id="dataPrzyjazdu" class="dataPrzyjazdu" required>
                         </div>
                         <div class="inputChange">
                             <label for="dataWyjazdu">Data Wyjazdu</label>
-                            <input type="date" id="dataWyjazdu" class="dataWyjazdu">
+                            <input type="date" id="dataWyjazdu" class="dataWyjazdu" required>
                         </div>
                         <div class="inputChange">
                             <label for="pietro">Piętro</label>
                             <select id="pietro" class="pietro">
                                 <option value="">Wszystkie</option>
-                                <option value="parter">Parter</option>
                                 <option value="1">1 Piętro</option>
                                 <option value="2">2 Piętro</option>
+                                <option value="3">3 Piętro</option>
                             </select>
                         </div>
                     </div>
-                    <button class="Dostepnosc">Sprawdź dostępność</button>
+                    <button type="button" id="checkAvailabilityButton" class="Dostepnosc">Sprawdź dostępność</button>
                     <div class="accessible">
-                        <p>W przedziale DATA jest dostępnych : XX pokoi.</p>
+                        <p id="availabilityResult">W przedziale DATA jest dostępnych : XX pokoi.</p>
                     </div>
                 </form>
+
 
                 <!-- Sekcja rezerwacji -->
                 <section class="reservation">
@@ -63,6 +64,12 @@
                                 <label for="inputUserId">ID Użytkownika</label>
                                 <input type="number" id="inputUserId" name="UserId" class="inputID" required>
                             </div>
+                            <div class="second">
+                                <label for="inputLastName">Nazwisko</label>
+                                <input type="text" id="inputLastName" name="LastName" class="inputLastName" required>
+                            </div>
+                        </div>
+                        <div class="first">
                             <div class="second">
                                 <label for="selectRoomNumber">Numer Pokoju</label>
                                 <select id="selectRoomNumber" name="RoomNumber" class="inputRoom" required>
@@ -88,6 +95,7 @@
                     </form>
                     <div id="reservationMessage" style="margin-top: 20px;"></div>
                 </section>
+
 
 
 
@@ -137,13 +145,14 @@
 <script>
     document.getElementById("submitReservation").addEventListener("click", async function () {
         const userId = document.getElementById("inputUserId").value;
+        const lastName = document.getElementById("inputLastName").value;
         const roomNumber = document.getElementById("selectRoomNumber").value;
         const checkInDate = document.getElementById("inputDataPrzyjazdu").value;
         const checkOutDate = document.getElementById("inputDataWyjazdu").value;
         const messageDiv = document.getElementById("reservationMessage");
 
         // Walidacja danych na kliencie
-        if (!userId || !roomNumber || !checkInDate || !checkOutDate) {
+        if (!userId || !lastName || !roomNumber || !checkInDate || !checkOutDate) {
             messageDiv.textContent = "Wszystkie pola są wymagane.";
             messageDiv.style.color = "red";
             return;
@@ -158,6 +167,7 @@
                 },
                 body: JSON.stringify({
                     userId: parseInt(userId),
+                    lastName: lastName,
                     roomNumber: parseInt(roomNumber),
                     checkInDate: checkInDate,
                     checkOutDate: checkOutDate,
@@ -179,4 +189,6 @@
         }
     });
 </script>
+
+
 

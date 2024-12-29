@@ -85,6 +85,7 @@ namespace Hotel.Controllers
             {
                 UserId = reservationDto.UserId,
                 RoomId = room.Id,
+                LastName = reservationDto.LastName, // Dodanie nazwiska do zapisu
                 CheckInDate = reservationDto.CheckInDate,
                 CheckOutDate = reservationDto.CheckOutDate,
                 Status = "potwierdzona",
@@ -99,6 +100,44 @@ namespace Hotel.Controllers
 
 
 
+        [HttpPost]
+        public async Task<IActionResult> CheckAvailability([FromBody] AvailabilityRequestDto request)
+        {
+            if (request.CheckInDate >= request.CheckOutDate)
+            {
+                return Json(new { success = false, message = "Data wyjazdu musi być późniejsza niż data przyjazdu." });
+            }
+
+            // Pobierz pokoje na danym piętrze lub wszystkie
+            var roomsQuery = _context.Rooms.AsQueryable();
+
+            if (!string.IsNullOrEmpty(request.Floor))
+            {
+                roomsQuery = roomsQuery.Where(r => r.Floor.ToString() == request.Floor);
+            }
+
+            // Pobierz zajęte pokoje w wybranym przedziale dat
+            var occupiedRoomIds = await _context.Reservations
+                .Where(r => r.CheckInDate < request.CheckOutDate && r.CheckOutDate > request.CheckInDate)
+                .Select(r => r.RoomId)
+                .ToListAsync();
+
+            // Filtruj dostępne pokoje
+            var availableRooms = await roomsQuery
+                .Where(r => !occupiedRoomIds.Contains(r.Id))
+                .CountAsync();
+
+            return Json(new { success = true, availableRooms });
+        }
+
+        public class AvailabilityRequestDto
+        {
+            public DateTime CheckInDate { get; set; }
+            public DateTime CheckOutDate { get; set; }
+            public string? Floor { get; set; }
+        }
+
+
 
 
     }
@@ -106,8 +145,10 @@ namespace Hotel.Controllers
     public class ReservationDto
     {
         public int UserId { get; set; }
+        public string? LastName { get; set; } // Dodane nazwisko
         public int RoomNumber { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
     }
+
 }

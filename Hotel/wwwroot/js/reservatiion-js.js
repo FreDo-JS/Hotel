@@ -56,59 +56,47 @@
 
 */
 
-document.querySelector('.Dostepnosc').addEventListener('click', function (event) {
-    event.preventDefault(); // Zapobiega domyślnej akcji przycisku (odświeżenie strony)
+document.getElementById("checkAvailabilityButton").addEventListener("click", async function () {
+    const checkInDate = document.getElementById("dataPrzyjazdu").value;
+    const checkOutDate = document.getElementById("dataWyjazdu").value;
+    const floor = document.getElementById("pietro").value;
+    const resultElement = document.getElementById("availabilityResult");
 
-    // Pobieranie wartości z pól formularza
-    const dataPrzyjazdu = document.querySelector('.dataPrzyjazdu').value;
-    const dataWyjazdu = document.querySelector('.dataWyjazdu').value;
-
-    // Sprawdzenie, czy oba pola daty zostały wypełnione
-    if (!dataPrzyjazdu || !dataWyjazdu) {
-        alert('Proszę wypełnić oba pola daty.');
+    // Walidacja formularza
+    if (!checkInDate || !checkOutDate) {
+        resultElement.textContent = "Proszę wypełnić wszystkie wymagane pola.";
+        resultElement.style.color = "red";
         return;
     }
 
-    // Konwersja dat na obiekty JavaScript Date
-    const przyjazd = new Date(dataPrzyjazdu);
-    const wyjazd = new Date(dataWyjazdu);
-
-    // Pobieranie danych o pokojach z Firestore
-    db.collection('pokoje')
-        .get()
-        .then((querySnapshot) => {
-            let wolnePokoje = [];
-
-            querySnapshot.forEach((doc) => {
-                const pokojData = doc.data();
-
-                if (pokojData.status === 'wolny') {
-                    // Pokój jest wolny
-                    wolnePokoje.push(pokojData.numer);
-                } else {
-                    // Pokój jest zajęty - sprawdzamy, czy terminy rezerwacji nie pokrywają się
-                    const dataPrzyjazduZarezerwowana = pokojData.rezerwujacy?.dataPrzyjazdu?.toDate();
-                    const dataWyjazduZarezerwowana = pokojData.rezerwujacy?.dataWyjazdu?.toDate();
-
-                    if (dataPrzyjazduZarezerwowana && dataWyjazduZarezerwowana) {
-                        if (wyjazd <= dataPrzyjazduZarezerwowana || przyjazd >= dataWyjazduZarezerwowana) {
-                            // Terminy się nie pokrywają - pokój jest wolny w wybranym terminie
-                            wolnePokoje.push(pokojData.numer);
-                        }
-                    }
-                }
-            });
-
-            // Wyświetlenie informacji o dostępnych pokojach
-            if (wolnePokoje.length > 0) {
-                document.querySelector('.accessible p').textContent = `W przedziale ${dataPrzyjazdu} - ${dataWyjazdu} są dostępne pokoje: ${wolnePokoje.join(', ')}.`;
-            } else {
-                document.querySelector('.accessible p').textContent = `W przedziale ${dataPrzyjazdu} - ${dataWyjazdu} nie ma dostępnych pokojów.`;
-            }
-        })
-        .catch((error) => {
-            console.error('Błąd przy sprawdzaniu dostępności:', error);
-            alert('Wystąpił błąd przy sprawdzaniu dostępności. Proszę spróbować ponownie.');
+    try {
+        // Wysyłanie zapytania AJAX do kontrolera
+        const response = await fetch("/Service/CheckAvailability", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                checkInDate: checkInDate,
+                checkOutDate: checkOutDate,
+                floor: floor,
+            }),
         });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            resultElement.textContent = `W przedziale ${checkInDate} - ${checkOutDate} jest dostępnych ${data.availableRooms} pokoi.`;
+            resultElement.style.color = "green";
+        } else {
+            resultElement.textContent = data.message || "Wystąpił błąd podczas sprawdzania dostępności.";
+            resultElement.style.color = "red";
+        }
+    } catch (error) {
+        console.error("Błąd podczas komunikacji z serwerem:", error);
+        resultElement.textContent = "Wystąpił błąd po stronie serwera.";
+        resultElement.style.color = "red";
+    }
 });
+
 
