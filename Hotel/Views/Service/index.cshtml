@@ -120,6 +120,11 @@
                         <div class="QrRightSide">
                             <button class="load" onclick="loadExistingQRCode()">WCZYTAJ KOD QR</button>
                             <button class="generateNew" onclick="generateNewQRCode()">WYGENERUJ NOWY KOD</button>
+                            <button class="openIn" onclick="openQRCodeInNewTab()">OTWÓRZ W KARCIE</button>
+                            <button class="downloadQR" onclick="downloadQRCode()">POBIERZ KOD QR</button>
+                            <button class="sendQR" onclick="sendQrCode()">WYŚLIJ KOD QR</button>
+                            <label for="qrEmail">Adres mailowy</label>
+                            <input type="email" id="qrEmail" class="qrInput" placeholder="Wprowadź adres e-mail">
                         </div>
                     </div>
 

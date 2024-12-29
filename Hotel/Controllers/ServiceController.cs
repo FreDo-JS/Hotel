@@ -11,7 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.IO;
-
+using MailKit.Net.Smtp;
+using MimeKit;
 
 namespace Hotel.Controllers
 {
@@ -227,9 +228,102 @@ namespace Hotel.Controllers
                 }
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> SendQrCodeEmail([FromBody] ReservationEmailDto dto, [FromServices] EmailService emailService)
+        {
+            Console.WriteLine($"Próba wysłania kodu QR dla rezerwacji o ID: {dto.ReservationId}");
+
+            if (dto.ReservationId <= 0)
+            {
+                Console.WriteLine("Niepoprawne ID rezerwacji.");
+                return Json(new { success = false, message = "Niepoprawne ID rezerwacji." });
+            }
+
+            var reservation = await _context.Reservations
+                .Include(r => r.User) // Pobranie użytkownika
+                .FirstOrDefaultAsync(r => r.Id == dto.ReservationId);
+
+            if (reservation == null)
+            {
+                Console.WriteLine($"Rezerwacja o ID {dto.ReservationId} nie została znaleziona.");
+                return Json(new { success = false, message = "Nie znaleziono rezerwacji." });
+            }
+
+            if (string.IsNullOrEmpty(reservation.QRCode))
+            {
+                Console.WriteLine($"Rezerwacja o ID {dto.ReservationId} nie ma przypisanego kodu QR.");
+                return Json(new { success = false, message = "Kod QR nie jest dostępny." });
+            }
+
+            if (reservation.User == null || string.IsNullOrEmpty(reservation.User.Email))
+            {
+                Console.WriteLine("Nie znaleziono adresu e-mail powiązanego użytkownika.");
+                return Json(new { success = false, message = "Nie znaleziono adresu e-mail powiązanego użytkownika." });
+            }
+
+            try
+            {
+                Console.WriteLine($"Rozpoczynanie wysyłania kodu QR na adres: {reservation.User.Email}");
+                await emailService.SendEmailWithQrCode(reservation.User.Email, reservation.QRCode);
+                return Json(new { success = true, message = "Kod QR został wysłany na e-mail." });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Błąd podczas wysyłania e-maila: {ex}");
+                Console.WriteLine(ex.Message);
+                return Json(new { success = false, message = "Wystąpił błąd podczas wysyłania e-maila." });
+            }
+        }
 
 
 
+
+
+        public class EmailService
+        {
+            private readonly IConfiguration _configuration;
+
+            public EmailService(IConfiguration configuration)
+            {
+                _configuration = configuration;
+            }
+
+            public async Task SendEmailWithQrCode(string recipientEmail, string qrCodeBase64)
+            {
+                var emailSettings = _configuration.GetSection("EmailSettings");
+
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("Hotel QR System", emailSettings["SenderEmail"]));
+                message.To.Add(new MailboxAddress("", recipientEmail));
+                message.Subject = "Twój kod QR";
+
+                // Treść e-maila
+                var bodyBuilder = new BodyBuilder
+                {
+                    HtmlBody = "<p>W załączniku znajdziesz swój kod QR.</p>"
+                };
+
+                // Konwersja QR kodu z base64 do załącznika
+                var qrCodeBytes = Convert.FromBase64String(qrCodeBase64.Replace("data:image/png;base64,", ""));
+                bodyBuilder.Attachments.Add("QRCode.png", qrCodeBytes, new ContentType("image", "png"));
+
+                message.Body = bodyBuilder.ToMessageBody();
+
+                using (var client = new SmtpClient())
+                {
+                    await client.ConnectAsync(emailSettings["SmtpServer"], int.Parse(emailSettings["SmtpPort"]), MailKit.Security.SecureSocketOptions.StartTls);
+                    await client.AuthenticateAsync(emailSettings["SenderEmail"], emailSettings["SenderPassword"]);
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
+                }
+            }
+        }
+
+
+        public class ReservationEmailDto
+        {
+            public int ReservationId { get; set; }
+        }
 
 
         public class AvailabilityRequestDto

@@ -3,6 +3,7 @@ using Google.Apis.Auth.OAuth2;
 using Hotel.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static Hotel.Controllers.ServiceController;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Rejestracja kontrolerów
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<EmailService>();
 
 var app = builder.Build();
 

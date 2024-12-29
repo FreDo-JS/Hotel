@@ -164,6 +164,73 @@ async function generateNewQRCode() {
         console.error("Błąd podczas generowania nowego kodu QR:", error);
     }
 }
+function openQRCodeInNewTab() {
+    const qrCodeImage = document.getElementById("qrCodeImage").src;
+
+    if (!qrCodeImage || qrCodeImage === "") {
+        alert("Brak załadowanego kodu QR. Najpierw wczytaj lub wygeneruj kod QR.");
+        return;
+    }
+
+    const newTab = window.open();
+    newTab.document.write(`<img src="${qrCodeImage}" alt="Kod QR" style="max-width: 100%; height: auto;">`);
+}
+function downloadQRCode() {
+    const qrCodeImage = document.getElementById("qrCodeImage").src;
+
+    if (!qrCodeImage || qrCodeImage === "") {
+        alert("Brak załadowanego kodu QR. Najpierw wczytaj lub wygeneruj kod QR.");
+        return;
+    }
+
+    // Tworzenie elementu <a> do pobierania pliku
+    const link = document.createElement("a");
+    link.href = qrCodeImage;
+    link.download = "QRCode.png";
+    link.click();
+}
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".sendQR").addEventListener("click", sendQrCode);
+});
+
+async function sendQrCode() {
+    const reservationId = document.getElementById("qrReservationId").value.trim();
+
+    if (!reservationId) {
+        alert("Proszę podać ID rezerwacji.");
+        console.error("Brak wymaganych danych: reservationId.");
+        return;
+    }
+
+    console.log("Przesyłane dane:", { reservationId });
+
+    try {
+        const response = await fetch(`/Service/SendQrCodeEmail`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ reservationId: parseInt(reservationId) }),
+        });
+
+        const data = await response.json();
+        console.log("Odpowiedź z serwera:", data);
+
+        if (data.success) {
+            alert("Kod QR został wysłany na e-mail.");
+        } else {
+            alert(data.message || "Nie udało się wysłać kodu QR.");
+        }
+    } catch (error) {
+        console.error("Błąd podczas wysyłania kodu QR:", error);
+    }
+}
+
+console.log("Przesyłane dane:", JSON.stringify({ reservationId: parseInt(reservationId), email: email }));
+
+
+
+
 
 
 
