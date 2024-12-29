@@ -47,89 +47,53 @@ namespace Hotel.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ZarezerwujPokoj([FromBody] RezerwacjaDto rezerwacja)
+        public async Task<IActionResult> CreateReservation([FromBody] ReservationDto reservationDto)
         {
-            if (string.IsNullOrEmpty(rezerwacja.Imie) || string.IsNullOrEmpty(rezerwacja.Nazwisko) || rezerwacja.LiczbaOsob <= 0 || string.IsNullOrEmpty(rezerwacja.Pokoj) || rezerwacja.DataPrzyjazdu >= rezerwacja.DataWyjazdu)
+            if (reservationDto.CheckInDate >= reservationDto.CheckOutDate)
             {
-                return Json(new { success = false, message = "Wszystkie pola są wymagane, a data wyjazdu musi być późniejsza niż data przyjazdu." });
+                return Json(new { success = false, message = "Data wyjazdu musi być późniejsza niż data przyjazdu." });
             }
 
-            // Generowanie unikalnego identyfikatora dla pokoju
-            string unikalnyKod = Guid.NewGuid().ToString();
+            // Sprawdź dostępność pokoju
+            var isAvailable = !await _context.Reservations.AnyAsync(r =>
+                r.RoomId == reservationDto.RoomId &&
+                ((reservationDto.CheckInDate >= r.CheckInDate && reservationDto.CheckInDate < r.CheckOutDate) ||
+                 (reservationDto.CheckOutDate > r.CheckInDate && reservationDto.CheckOutDate <= r.CheckOutDate) ||
+                 (reservationDto.CheckInDate <= r.CheckInDate && reservationDto.CheckOutDate >= r.CheckOutDate)));
 
-            // Generowanie kodu QR przy użyciu QRCoder
-            string kodQRUrl;
-            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+            if (!isAvailable)
             {
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(unikalnyKod, QRCodeGenerator.ECCLevel.Q);
-                BitmapByteQRCode qrCode = new BitmapByteQRCode(qrCodeData);
-                byte[] qrCodeAsBitmapByteArr = qrCode.GetGraphic(20);
-                kodQRUrl = "data:image/png;base64," + Convert.ToBase64String(qrCodeAsBitmapByteArr);
+                return Json(new { success = false, message = "Pokój jest zajęty w wybranym terminie." });
             }
 
-            // Dodawanie rezerwacji do Firestore
-            try
+            // Utwórz nową rezerwację
+            var reservation = new Reservation
             {
-                FirestoreDb db = FirestoreDb.Create("hotelssigma");
-                var document = db.Collection("pokoje").Document(rezerwacja.Pokoj);
-                var docSnapshot = await document.GetSnapshotAsync();
+                UserId = reservationDto.UserId,
+                RoomId = reservationDto.RoomId,
+                CheckInDate = reservationDto.CheckInDate,
+                CheckOutDate = reservationDto.CheckOutDate,
+                Status = "potwierdzona",
+                CreatedAt = DateTime.Now
+            };
 
-                if (docSnapshot.Exists)
-                {
-                    var pokojData = docSnapshot.ToDictionary();
+            _context.Reservations.Add(reservation);
+            await _context.SaveChangesAsync();
 
-                    // Sprawdzenie, czy pokój jest wolny
-                    if (pokojData.ContainsKey("status") && pokojData["status"].ToString() == "wolny")
-                    {
-                        // Aktualizacja dokumentu pokoju
-                        var rezerwujacy = new
-                        {
-                            imie = rezerwacja.Imie,
-                            nazwisko = rezerwacja.Nazwisko,
-                            liczbaOsob = rezerwacja.LiczbaOsob,
-                            dataPrzyjazdu = rezerwacja.DataPrzyjazdu,
-                            dataWyjazdu = rezerwacja.DataWyjazdu
-                        };
-
-                        var updateData = new
-                        {
-                            status = "zajęty",
-                            rezerwujacy = rezerwujacy,
-                            kodQR = unikalnyKod,
-                            kodQRUrl = kodQRUrl
-                        };
-
-                        await document.SetAsync(updateData);
-
-                        return Json(new { success = true, kodQRUrl = kodQRUrl });
-                    }
-                    else
-                    {
-                        return Json(new { success = false, message = "Pokój jest już zajęty." });
-                    }
-                }
-                else
-                {
-                    return Json(new { success = false, message = "Podany pokój nie istnieje." });
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Błąd przy zapisywaniu rezerwacji: " + ex.ToString()); // Logowanie pełnych informacji o wyjątku
-                return Json(new { success = false, message = "Wystąpił błąd przy zapisywaniu rezerwacji: " + ex.Message });
-            }
-
+            return Json(new { success = true });
         }
+
+
+
+        
+
     }
 
-    // DTO dla rezerwacji
-    public class RezerwacjaDto
+    public class ReservationDto
     {
-        public string? Imie { get; set; }
-        public string? Nazwisko { get; set; }
-        public int LiczbaOsob { get; set; }
-        public string? Pokoj { get; set; }
-        public DateTime DataPrzyjazdu { get; set; }
-        public DateTime DataWyjazdu { get; set; }
+        public int UserId { get; set; }
+        public int RoomId { get; set; }
+        public DateTime CheckInDate { get; set; }
+        public DateTime CheckOutDate { get; set; }
     }
 }

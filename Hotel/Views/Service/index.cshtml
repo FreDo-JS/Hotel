@@ -57,40 +57,33 @@
                 <!-- Sekcja rezerwacji -->
                 <section class="reservation">
                     <h2>Rezerwacja</h2>
-                    <form action="" class="checkReservation">
+                    <form id="reservationForm" class="checkReservation">
                         <div class="first">
                             <div class="second">
-                                <label for="inputImie">Imię</label>
-                                <input type="text" id="inputImie" class="inputImie">
+                                <label for="inputUserId">ID Użytkownika</label>
+                                <input type="number" id="inputUserId" name="UserId" class="inputID" required>
                             </div>
                             <div class="second">
-                                <label for="inputNazwisko">Nazwisko</label>
-                                <input type="text" id="inputNazwisko" class="inputNazwisko">
-                            </div>
-                        </div>
-                        <div class="first">
-                            <div class="second">
-                                <label for="inputLiczbaOsob">Liczba osób</label>
-                                <input type="number" id="inputLiczbaOsob" class="inputLiczbaOsob">
-                            </div>
-                            <div class="second">
-                                <label for="inputPokoj">Pokój</label>
-                                <input type="number" id="inputPokoj" class="inputPokoj">
+                                <label for="inputRoomId">ID Pokoju</label>
+                                <input type="number" id="inputRoomId" name="RoomId" class="inputPokoj" required>
                             </div>
                         </div>
                         <div class="first">
                             <div class="second">
                                 <label for="inputDataPrzyjazdu">Data Przyjazdu</label>
-                                <input type="date" id="inputDataPrzyjazdu" class="inputDataPrzyjazdu">
+                                <input type="date" id="inputDataPrzyjazdu" name="CheckInDate" class="inputDataPrzyjazdu" required>
                             </div>
                             <div class="second">
                                 <label for="inputDataWyjazdu">Data Wyjazdu</label>
-                                <input type="date" id="inputDataWyjazdu" class="inputDataWyjazdu">
+                                <input type="date" id="inputDataWyjazdu" name="CheckOutDate" class="inputDataWyjazdu" required>
                             </div>
                         </div>
-                        <button class="checkReserv">Zarezerwuj pokój</button>
+                        <button type="button" id="submitReservation" class="checkReserv">Zarezerwuj pokój</button>
                     </form>
+                    <div id="reservationMessage" style="margin-top: 20px;"></div>
                 </section>
+
+
 
                 <!-- Lista pokoi -->
                 <div class="roomsCheckRight">
@@ -133,4 +126,50 @@
         </div>
     </main>
 </body>
+
 </html>
+<script>
+    document.getElementById("submitReservation").addEventListener("click", async function () {
+        const userId = document.getElementById("inputUserId").value;
+        const roomId = document.getElementById("inputRoomId").value;
+        const checkInDate = document.getElementById("inputDataPrzyjazdu").value;
+        const checkOutDate = document.getElementById("inputDataWyjazdu").value;
+        const messageDiv = document.getElementById("reservationMessage");
+
+        // Walidacja danych na kliencie
+        if (!userId || !roomId || !checkInDate || !checkOutDate) {
+            messageDiv.textContent = "Wszystkie pola są wymagane.";
+            messageDiv.style.color = "red";
+            return;
+        }
+
+        // Wysyłanie danych do kontrolera
+        try {
+            const response = await fetch("/Service/CreateReservation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userId: parseInt(userId),
+                    roomId: parseInt(roomId),
+                    checkInDate: checkInDate,
+                    checkOutDate: checkOutDate,
+                }),
+            });
+
+            const data = await response.json();
+            if (response.ok && data.success) {
+                messageDiv.textContent = "Rezerwacja została utworzona pomyślnie!";
+                messageDiv.style.color = "green";
+            } else {
+                messageDiv.textContent = data.message || "Wystąpił błąd podczas tworzenia rezerwacji.";
+                messageDiv.style.color = "red";
+            }
+        } catch (error) {
+            console.error("Błąd podczas wysyłania danych:", error);
+            messageDiv.textContent = "Wystąpił błąd po stronie serwera.";
+            messageDiv.style.color = "red";
+        }
+    });
+</script>

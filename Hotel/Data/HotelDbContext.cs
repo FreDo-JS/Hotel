@@ -14,6 +14,8 @@ namespace Hotel.Data
 
         // Tabela statystyk pokoi
         public DbSet<RoomStatistic> RoomStatistics { get; set; }
+
+        public DbSet<Reservation> Reservations { get; set; } // Dodanie tabeli rezerwacji
     }
 
     // Model dla tabeli Users
@@ -48,4 +50,17 @@ namespace Hotel.Data
         public DateTime? LastCleaned { get; set; }
         public int CurrentOccupancy { get; set; }
     }
+    public class Reservation
+    {
+        public int Id { get; set; }         
+        public int UserId { get; set; }
+        public User? User { get; set; } 
+        public int RoomId { get; set; }
+        public Room? Room { get; set; } 
+        public DateTime CheckInDate { get; set; } 
+        public DateTime CheckOutDate { get; set; } 
+        public string? Status { get; set; } 
+        public DateTime CreatedAt { get; set; } = DateTime.Now; 
+    }
+
 }

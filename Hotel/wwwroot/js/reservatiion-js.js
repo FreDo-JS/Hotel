@@ -1,4 +1,4 @@
-﻿document.querySelector('.checkReserv').addEventListener('click', function (event) {
+﻿/*document.querySelector('.checkReserv').addEventListener('click', function (event) {
     event.preventDefault(); // Zapobiega domyślnej akcji przycisku (odświeżenie strony)
 
     // Pobieranie wartości z formularza rezerwacji
@@ -54,7 +54,7 @@
 });
 
 
-
+*/
 
 document.querySelector('.Dostepnosc').addEventListener('click', function (event) {
     event.preventDefault(); // Zapobiega domyślnej akcji przycisku (odświeżenie strony)
