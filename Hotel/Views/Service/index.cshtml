@@ -104,39 +104,25 @@
                 <!-- Lista pokoi -->
                 <div class="roomsCheckRight">
                     <div class="roomList">
-                        <div class="floor">
-                            <p>Piętro:</p>
-                            <p>Parter</p>
-                            <p>1 piętro</p>
-                            <p>2 piętro</p>
-                            <p>3 piętro</p>
-                            <p>4 piętro</p>
-                        </div>
-                        <div class="rooms">
-                            <p>Pokój</p>
-                            <span>101, </span><span>102, </span><span>103</span>
-                        </div>
+                        
+                        
                     </div>
 
                     <!-- Sekcja kodów QR -->
                     <div class="QR">
                         <div class="qRLeftSide">
-                            <label for="qrPokoj">Pokój</label>
-                            <input type="number" id="qrPokoj" class="qrInput">
-                            <label for="qrEmail">Adres mailowy</label>
-                            <input type="email" id="qrEmail" class="qrInput">
+                            <label for="qrReservationId">ID Rezerwacji</label>
+                            <input type="number" id="qrReservationId" class="qrInput">
                             <div class="codeQR">
-                                Tu kod qr okok?
+                                <img id="qrCodeImage" src="" alt="Kod QR">
                             </div>
                         </div>
                         <div class="QrRightSide">
-                            <button class="load">WCZYTAJ POKÓJ</button>
-                            <button class="sendQR">WYŚLIJ KOD QR</button>
-                            <button class="downloadQR">POBIERZ KOD QR</button>
-                            <button class="openIn">OTWÓRZ W KARCIE</button>
-                            <button class="generateNew">WYGENERUJ NOWY</button>
+                            <button class="load" onclick="loadQRCode()">WCZYTAJ POKÓJ</button>
+                            <button class="generateNew" onclick="generateNewQRCode()">WYGENERUJ NOWY</button>
                         </div>
                     </div>
+
                 </div>
             </section>
         </div>

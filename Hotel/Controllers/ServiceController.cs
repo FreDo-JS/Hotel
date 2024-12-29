@@ -8,6 +8,10 @@ using System.IO;
 using System.Threading.Tasks;
 using Hotel.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Imaging;
+using System.Drawing;
+using System.IO;
+
 
 namespace Hotel.Controllers
 {
@@ -140,8 +144,42 @@ namespace Hotel.Controllers
 
             return Json(new { success = true, rooms = result });
         }
+        public IActionResult GenerateQRCode(int reservationId)
+        {
+            var reservation = _context.Reservations
+                .Include(r => r.User)
+                .Include(r => r.Room)
+                .FirstOrDefault(r => r.Id == reservationId);
 
-       
+            if (reservation == null)
+            {
+                return Json(new { success = false, message = "Nie znaleziono rezerwacji." });
+            }
+
+            // Informacje do zapisania w kodzie QR
+            var qrData = $"Pokój: {reservation.Room.RoomNumber}\n" +
+                         $"Użytkownik: {reservation.User.Name} {reservation.LastName}\n" +
+                         $"Termin: {reservation.CheckInDate:yyyy-MM-dd} - {reservation.CheckOutDate:yyyy-MM-dd}";
+
+            // Generowanie QR kodu
+            using (var qrGenerator = new QRCodeGenerator())
+            {
+                var qrCodeData = qrGenerator.CreateQrCode(qrData, QRCodeGenerator.ECCLevel.Q);
+                using (var qrCode = new QRCode(qrCodeData))
+                {
+                    using (var bitmap = qrCode.GetGraphic(20))
+                    {
+                        using (var stream = new MemoryStream())
+                        {
+                            bitmap.Save(stream, ImageFormat.Png);
+                            var base64QRCode = Convert.ToBase64String(stream.ToArray());
+                            return Json(new { success = true, qrCode = $"data:image/png;base64,{base64QRCode}" });
+                        }
+                    }
+                }
+            }
+        }
+
 
 
         public class AvailabilityRequestDto

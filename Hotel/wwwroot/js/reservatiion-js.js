@@ -120,6 +120,50 @@ document.getElementById("checkAvailabilityButton").addEventListener("click", asy
         resultElement.style.color = "red";
     }
 });
+async function loadQRCode() {
+    const reservationId = document.getElementById("qrReservationId").value;
+
+    if (!reservationId) {
+        alert("Proszę podać ID rezerwacji.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/Service/GenerateQRCode?reservationId=${reservationId}`);
+        const data = await response.json();
+
+        if (data.success) {
+            document.getElementById("qrCodeImage").src = data.qrCode;
+        } else {
+            alert(data.message || "Nie udało się załadować kodu QR.");
+        }
+    } catch (error) {
+        console.error("Błąd podczas ładowania kodu QR:", error);
+    }
+}
+
+async function generateNewQRCode() {
+    const reservationId = document.getElementById("qrReservationId").value;
+
+    if (!reservationId) {
+        alert("Proszę podać ID rezerwacji.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/Service/GenerateQRCode?reservationId=${reservationId}`);
+        const data = await response.json();
+
+        if (data.success) {
+            document.getElementById("qrCodeImage").src = data.qrCode;
+            alert("Nowy kod QR został wygenerowany.");
+        } else {
+            alert(data.message || "Nie udało się wygenerować nowego kodu QR.");
+        }
+    } catch (error) {
+        console.error("Błąd podczas generowania nowego kodu QR:", error);
+    }
+}
 
 
 
