@@ -189,9 +189,9 @@ function downloadQRCode() {
     link.download = "QRCode.png";
     link.click();
 }
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector(".sendQR").addEventListener("click", sendQrCode);
-});
+//document.addEventListener("DOMContentLoaded", () => {
+  //  document.querySelector(".sendQR").addEventListener("click", sendQrCode); 
+//});
 
 async function sendQrCode() {
     const reservationId = document.getElementById("qrReservationId").value.trim();

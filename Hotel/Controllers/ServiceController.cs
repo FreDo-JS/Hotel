@@ -227,6 +227,7 @@ namespace Hotel.Controllers
                     }
                 }
             }
+
         }
         [HttpPost]
         public async Task<IActionResult> SendQrCodeEmail([FromBody] ReservationEmailDto dto, [FromServices] EmailService emailService)
@@ -288,35 +289,83 @@ namespace Hotel.Controllers
                 _configuration = configuration;
             }
 
-            public async Task SendEmailWithQrCode(string recipientEmail, string qrCodeBase64)
+            public async Task SendEmailWithQrCode(string recipientEmail, string qrCodeData)
             {
-                var emailSettings = _configuration.GetSection("EmailSettings");
-
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Hotel QR System", emailSettings["SenderEmail"]));
-                message.To.Add(new MailboxAddress("", recipientEmail));
-                message.Subject = "Twój kod QR";
-
-                // Treść e-maila
-                var bodyBuilder = new BodyBuilder
+                try
                 {
-                    HtmlBody = "<p>W załączniku znajdziesz swój kod QR.</p>"
-                };
+                    Console.WriteLine($"QRCodeData: {qrCodeData}");
 
-                // Konwersja QR kodu z base64 do załącznika
-                var qrCodeBytes = Convert.FromBase64String(qrCodeBase64.Replace("data:image/png;base64,", ""));
-                bodyBuilder.Attachments.Add("QRCode.png", qrCodeBytes, new ContentType("image", "png"));
+                    // Generowanie obrazu kodu QR na podstawie danych
+                    byte[] qrCodeBytes;
+                    using (var qrGenerator = new QRCodeGenerator())
+                    {
+                        var qrCode = new QRCode(qrGenerator.CreateQrCode(qrCodeData, QRCodeGenerator.ECCLevel.Q));
+                        using (var bitmap = qrCode.GetGraphic(20))
+                        {
+                            using (var stream = new MemoryStream())
+                            {
+                                bitmap.Save(stream, ImageFormat.Png);
+                                qrCodeBytes = stream.ToArray();
+                            }
+                        }
+                    }
 
-                message.Body = bodyBuilder.ToMessageBody();
+                    var emailSettings = _configuration.GetSection("EmailSettings");
 
-                using (var client = new SmtpClient())
+                    var message = new MimeMessage();
+                    message.From.Add(new MailboxAddress("Hotel QR System", emailSettings["SenderEmail"]));
+                    message.To.Add(new MailboxAddress("", recipientEmail));
+                    message.Subject = "Twój kod QR";
+
+                    var bodyBuilder = new BodyBuilder
+                    {
+                        HtmlBody = "<p>W załączniku znajdziesz swój kod QR. Użyj go do otwarcia drzwi swojego pokoju.</p>"
+                    };
+
+                    // Dołącz kod QR jako załącznik
+                    bodyBuilder.Attachments.Add("QRCode.png", qrCodeBytes, new ContentType("image", "png"));
+                    message.Body = bodyBuilder.ToMessageBody();
+
+                    using (var client = new SmtpClient())
+                    {
+                        try
+                        {
+                            // Łączenie z serwerem SMTP
+                            await client.ConnectAsync(
+                                _configuration["EmailSettings:SmtpServer"],
+                                int.Parse(_configuration["EmailSettings:SmtpPort"]),
+                                MailKit.Security.SecureSocketOptions.SslOnConnect); // SSL dla portu 465
+
+                            // Uwierzytelnianie
+                            await client.AuthenticateAsync(
+                                _configuration["EmailSettings:SenderEmail"],
+                                _configuration["EmailSettings:SenderPassword"]);
+
+                            // Wysyłanie e-maila
+                            await client.SendAsync(message);
+                            Console.WriteLine("E-mail został wysłany pomyślnie.");
+
+                            // Rozłączanie
+                            await client.DisconnectAsync(true);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Błąd podczas wysyłania e-maila: {ex.Message}");
+                            throw;
+                        }
+                    }
+
+
+                    Console.WriteLine("E-mail został wysłany.");
+                }
+                catch (Exception ex)
                 {
-                    await client.ConnectAsync(emailSettings["SmtpServer"], int.Parse(emailSettings["SmtpPort"]), MailKit.Security.SecureSocketOptions.StartTls);
-                    await client.AuthenticateAsync(emailSettings["SenderEmail"], emailSettings["SenderPassword"]);
-                    await client.SendAsync(message);
-                    await client.DisconnectAsync(true);
+                    Console.WriteLine($"Błąd podczas wysyłania e-maila: {ex.Message}");
+                    throw;
                 }
             }
+
+
         }
 
 
