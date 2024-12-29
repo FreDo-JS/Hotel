@@ -144,24 +144,33 @@ namespace Hotel.Controllers
 
             return Json(new { success = true, rooms = result });
         }
-        public IActionResult GenerateQRCode(int reservationId)
+        private string GenerateRandomCode(int length = 10)
         {
-            var reservation = _context.Reservations
-                .Include(r => r.User)
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GenerateNewQRCode(int reservationId)
+        {
+            var reservation = await _context.Reservations
                 .Include(r => r.Room)
-                .FirstOrDefault(r => r.Id == reservationId);
+                .FirstOrDefaultAsync(r => r.Id == reservationId);
 
             if (reservation == null)
             {
                 return Json(new { success = false, message = "Nie znaleziono rezerwacji." });
             }
 
-            // Informacje do zapisania w kodzie QR
-            var qrData = $"Pokój: {reservation.Room.RoomNumber}\n" +
-                         $"Użytkownik: {reservation.User.Name} {reservation.LastName}\n" +
-                         $"Termin: {reservation.CheckInDate:yyyy-MM-dd} - {reservation.CheckOutDate:yyyy-MM-dd}";
+            // Generowanie nowego losowego kodu
+            reservation.QRCode = GenerateRandomCode();
+            await _context.SaveChangesAsync();
 
-            // Generowanie QR kodu
+            // Informacje do zapisania w kodzie QR
+            var qrData = reservation.QRCode;
+
             using (var qrGenerator = new QRCodeGenerator())
             {
                 var qrCodeData = qrGenerator.CreateQrCode(qrData, QRCodeGenerator.ECCLevel.Q);
@@ -179,6 +188,47 @@ namespace Hotel.Controllers
                 }
             }
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetQRCode(int reservationId)
+        {
+            var reservation = await _context.Reservations
+                .Include(r => r.Room)
+                .FirstOrDefaultAsync(r => r.Id == reservationId);
+
+            if (reservation == null)
+            {
+                return Json(new { success = false, message = "Nie znaleziono rezerwacji." });
+            }
+
+            if (string.IsNullOrEmpty(reservation.QRCode))
+            {
+                return Json(new { success = false, message = "Nie znaleziono kodu QR dla tej rezerwacji." });
+            }
+
+            // Generowanie QR kodu na podstawie istniejącego ciągu
+            var qrData = reservation.QRCode;
+
+            using (var qrGenerator = new QRCodeGenerator())
+            {
+                var qrCodeData = qrGenerator.CreateQrCode(qrData, QRCodeGenerator.ECCLevel.Q);
+                using (var qrCode = new QRCode(qrCodeData))
+                {
+                    using (var bitmap = qrCode.GetGraphic(20))
+                    {
+                        using (var stream = new MemoryStream())
+                        {
+                            bitmap.Save(stream, ImageFormat.Png);
+                            var base64QRCode = Convert.ToBase64String(stream.ToArray());
+                            return Json(new { success = true, qrCode = $"data:image/png;base64,{base64QRCode}" });
+                        }
+                    }
+                }
+            }
+        }
+
+
 
 
 

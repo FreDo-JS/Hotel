@@ -120,7 +120,7 @@ document.getElementById("checkAvailabilityButton").addEventListener("click", asy
         resultElement.style.color = "red";
     }
 });
-async function loadQRCode() {
+async function loadExistingQRCode() {
     const reservationId = document.getElementById("qrReservationId").value;
 
     if (!reservationId) {
@@ -129,7 +129,7 @@ async function loadQRCode() {
     }
 
     try {
-        const response = await fetch(`/Service/GenerateQRCode?reservationId=${reservationId}`);
+        const response = await fetch(`/Service/GetQRCode?reservationId=${reservationId}`);
         const data = await response.json();
 
         if (data.success) {
@@ -151,7 +151,7 @@ async function generateNewQRCode() {
     }
 
     try {
-        const response = await fetch(`/Service/GenerateQRCode?reservationId=${reservationId}`);
+        const response = await fetch(`/Service/GenerateNewQRCode?reservationId=${reservationId}`);
         const data = await response.json();
 
         if (data.success) {
@@ -164,6 +164,8 @@ async function generateNewQRCode() {
         console.error("Błąd podczas generowania nowego kodu QR:", error);
     }
 }
+
+
 
 
 
