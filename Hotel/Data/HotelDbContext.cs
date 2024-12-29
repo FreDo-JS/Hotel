@@ -61,7 +61,7 @@ namespace Hotel.Data
         public DateTime CheckInDate { get; set; } 
         public DateTime CheckOutDate { get; set; }
         public string? LastName { get; set; } // Nazwisko użytkownika
-        public string? QRCode { get; set; } // Zapisany kod QR w formacie base64
+        public string QRCode { get; set; } // Zapisany kod QR w formacie base64
         public string? Status { get; set; } 
         public DateTime CreatedAt { get; set; } = DateTime.Now; 
 
