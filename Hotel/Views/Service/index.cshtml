@@ -64,8 +64,14 @@
                                 <input type="number" id="inputUserId" name="UserId" class="inputID" required>
                             </div>
                             <div class="second">
-                                <label for="inputRoomId">ID Pokoju</label>
-                                <input type="number" id="inputRoomId" name="RoomId" class="inputPokoj" required>
+                                <label for="selectRoomNumber">Numer Pokoju</label>
+                                <select id="selectRoomNumber" name="RoomNumber" class="inputRoom" required>
+                                    <option value="">Wybierz pokój</option>
+                                    @foreach (var room in ViewBag.Rooms)
+                                    {
+                                        <option value="@room.RoomNumber">@room.RoomNumber</option>
+                                    }
+                                </select>
                             </div>
                         </div>
                         <div class="first">
@@ -131,13 +137,13 @@
 <script>
     document.getElementById("submitReservation").addEventListener("click", async function () {
         const userId = document.getElementById("inputUserId").value;
-        const roomId = document.getElementById("inputRoomId").value;
+        const roomNumber = document.getElementById("selectRoomNumber").value;
         const checkInDate = document.getElementById("inputDataPrzyjazdu").value;
         const checkOutDate = document.getElementById("inputDataWyjazdu").value;
         const messageDiv = document.getElementById("reservationMessage");
 
         // Walidacja danych na kliencie
-        if (!userId || !roomId || !checkInDate || !checkOutDate) {
+        if (!userId || !roomNumber || !checkInDate || !checkOutDate) {
             messageDiv.textContent = "Wszystkie pola są wymagane.";
             messageDiv.style.color = "red";
             return;
@@ -152,7 +158,7 @@
                 },
                 body: JSON.stringify({
                     userId: parseInt(userId),
-                    roomId: parseInt(roomId),
+                    roomNumber: parseInt(roomNumber),
                     checkInDate: checkInDate,
                     checkOutDate: checkOutDate,
                 }),
@@ -173,3 +179,4 @@
         }
     });
 </script>
+

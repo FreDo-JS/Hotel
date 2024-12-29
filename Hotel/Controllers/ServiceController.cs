@@ -18,18 +18,25 @@ namespace Hotel.Controllers
         {
             _context = context;
         }
+        
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(); // Dodaje widok Index.cshtml dla tego kontrolera
+            // Pobierz listę pokoi z bazy danych
+            var rooms = await _context.Rooms.Select(r => new { r.Id, r.RoomNumber }).ToListAsync();
+            ViewBag.Rooms = rooms; // Przekazanie listy pokoi do widoku
+
+            return View();
         }
-        // Wyświetlenie strony dodaj_pokoj.cshtml
+        
         [HttpGet]
         public async Task<IActionResult> DodajPokoj()
         {
             var rooms = await _context.Rooms.ToListAsync();
             return View(rooms);
         }
+        
+
 
         // Dodanie nowego pokoju
         [HttpPost]
@@ -54,9 +61,16 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Data wyjazdu musi być późniejsza niż data przyjazdu." });
             }
 
+            // Pobierz ID pokoju na podstawie numeru pokoju
+            var room = await _context.Rooms.FirstOrDefaultAsync(r => r.RoomNumber == reservationDto.RoomNumber);
+            if (room == null)
+            {
+                return Json(new { success = false, message = "Nie znaleziono pokoju o podanym numerze." });
+            }
+
             // Sprawdź dostępność pokoju
             var isAvailable = !await _context.Reservations.AnyAsync(r =>
-                r.RoomId == reservationDto.RoomId &&
+                r.RoomId == room.Id &&
                 ((reservationDto.CheckInDate >= r.CheckInDate && reservationDto.CheckInDate < r.CheckOutDate) ||
                  (reservationDto.CheckOutDate > r.CheckInDate && reservationDto.CheckOutDate <= r.CheckOutDate) ||
                  (reservationDto.CheckInDate <= r.CheckInDate && reservationDto.CheckOutDate >= r.CheckOutDate)));
@@ -70,7 +84,7 @@ namespace Hotel.Controllers
             var reservation = new Reservation
             {
                 UserId = reservationDto.UserId,
-                RoomId = reservationDto.RoomId,
+                RoomId = room.Id,
                 CheckInDate = reservationDto.CheckInDate,
                 CheckOutDate = reservationDto.CheckOutDate,
                 Status = "potwierdzona",
@@ -85,14 +99,14 @@ namespace Hotel.Controllers
 
 
 
-        
+
 
     }
 
     public class ReservationDto
     {
         public int UserId { get; set; }
-        public int RoomId { get; set; }
+        public int RoomNumber { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
     }
