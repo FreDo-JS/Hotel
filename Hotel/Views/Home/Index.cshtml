@@ -1,8 +1,165 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel SS-IGMA</title>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+</head>
+<body class="mainContent">
+    <header id="glowna">
+        <div class="listLeft">
+            <ul class="ulMain">
+                <li class="mainList"><a href="#aboutUs">O NAS</a></li>
+                <li class="mainList"><a href="#rooms2">POKOJE</a></li>
+                <li class="mainList"><a href="#gallery">GALERIA</a></li>
+            </ul>
+        </div>
+        <!-- <div class="logoSigmy">
+
+        </div> -->
+        <img src="~/img/ss.png" alt="" class="logoSigmy">
+        <div class="listRight">
+            <ul class="ulMain">
+                <li class="mainList"><a href="#glowna">STRONA GŁÓWNA</a></li>
+                <li class="mainList"><a href="rezerwacja">REZERWACJA</a></li>
+                <li class="mainList"><a href="#footer">KONTAKT</a></li>
+            </ul>
+        </div>
+    </header>
+    <main class="background">
+
+        <div class="mainReservation">
+            <h1 class="h1">REZERWACJA</h1>
+
+            <form action="" class="mainForm">
+                <!-- <div class="mainDate"> -->
+                <div>
+                    <label for="">DATA PRZYJAZDU</label>
+                    <input type="date" class="form-input">
+                </div><div>
+                    <label for="">DATA ODJAZDU</label>
+                    <input type="date" class="form-input">
+                </div>
+                <!-- </div>
+                <div class="mainDate"> -->
+                <div>
+                    <label for="">ILOŚĆ OSÓB</label>
+                    <input type="number" class="form-input">
+                </div> <div>
+                    <label for="">ILOŚĆ POKOI</label>
+                    <input type="number" class="form-input">
+                </div>
+                <!-- </div> -->
+                <button class="book">REZERWUJ</button>
+            </form>
+        </div>
+
+        <div id="aboutUs">
+            <div class="aboutLeft">
+                <h2>O nas</h2>
+                <p class="aboutUsText">Hotel Sigma to miejsce, gdzie nowoczesny design łączy się z tradycyjną gościnnością, oferując niezapomniane wrażenia w sercu malowniczego regionu. Nasza historia sięga 2010 roku, kiedy z pasji do tworzenia wyjątkowych doświadczeń powstał ten rodzinny obiekt. Położony w spokojnej okolicy, zaledwie kilka minut od centrum, hotel zapewnia komfort i dostęp do lokalnych atrakcji. Nasz zespół, składający się z doświadczonych specjalistów, dba o każdy szczegół, aby każdy gość czuł się wyjątkowo. Zapraszamy do relaksu w naszym spa, delektowania się regionalną kuchnią w restauracji i odkrywania niezrównanego piękna okolicy.</p>
+
+            </div>
+            <div class="aboutRight">
+                <img src="~/img/recepcja.png" alt="recepcja" class="aboutImg">
+            </div>
+        </div>
+        <h2>Pokoje</h2>
+        <div id="rooms2">
+
+            <div class="coupleRoom">
+                <img src="~/img/coupleRoom.jpg" alt="bed">
+                <h2>Couple</h2>
+                <p>Pokój Couple to przytulna przestrzeń zaprojektowana z myślą o romantycznych chwilach we dwoje. Subtelne detale i wygodne wyposażenie tworzą idealne warunki do relaksu i budowania wspomnień.</p>
+            </div>
+            <div class="familyRoom">
+                <img src="~/img/familyRoom.jpg" alt="familyRoom">
+                <h2>Family</h2>
+                <p>Pokoje Family zapewniają przestronność i funkcjonalność, doskonałe dla rodzin podróżujących razem. Dzięki dodatkowym udogodnieniom, takim jak miejsce do zabawy dla dzieci, każdy członek rodziny poczuje się jak w domu.</p>
+            </div>
+            <div class="premiumRoom">
+                <img src="~/img/premiumRoom.jpg" alt="premiumRoom" class="premium">
+                <h2>Premium</h2>
+                <p>Pokój Premium to synonim luksusu i elegancji, oferujący wyższy standard wyposażenia oraz wyjątkowy design. Dedykowany dla osób ceniących komfort na najwyższym poziomie, z dodatkowymi udogodnieniami, takimi jak ekspres do kawy czy widok na malowniczą okolicę.</p>
+            </div>
+        </div>
+
+        <div class="grid-container" id="gallery">
+            <div class="items1">
+            </div>
+
+            <div class="items2">
+                <h2>Atrakcje</h2>
+                <ul>
+                    <li>Zjeżdzalnie</li>
+                    <li>Sauny</li>
+                    <li>Grota solna</li>
+                    <li>Siłownia</li>
+                </ul>
+            </div>
+
+            <div class="items3">3</div>
+            <div class="items4">4</div>
+            <div class="items5">
+                <h2>Jacuzzi</h2>
+                <p>Każda kąpiel w naszych wannach jacuzzi to unikalne doświadczenie - gorąca woda połączona z aromatycznymi dodatkami tworzy atmosferę błogiego odprężenia.</p>
+            </div>
+            <div class="items6"></div>
+            <div class="items7">7</div>
+            <div class="items8">
+                <h2>Sauny</h2>
+                <p>Aromatyczne seanse w suchych saunach i o zapachu ziół alpejskich, eukaliptusa i kosodrzewiny, tworzą niepowtarzalne doznania i unikalny klimat poddczas saunowania.</p>
+            </div>
+
+            <div class="items9">
+                <h2>Strefa wypoczynku</h2>
+                <p>Nasza strefa wypoczynku to miejsce, gdzie zatrzymujemy czas i pozwalamy cieszyć się chwilą pełnego spokoju.</p>
+            </div>
+            <div class="items10">2</div>
+            <div class="items11">
+                <h2>Grota solna i lodowa</h2>
+                <p>Wyjątkowe doświadczenie zainspirowane naturą, które podkreśla różnorodność naszych ofert. Panuje tu spokojna atmosfera, idealna do relaksu i medytacji.</p>
+            </div>
+            <div class="items12">4</div>
+            <div class="items13">
+                <h2>Siłownia</h2>
+                <p>Co tu wiele mówić, KUŹNIA PROGRESU</p>
+            </div>
+            <div class="items14">6</div>
+
+
+
+        </div>
+
+
+    </main>
+    <footer id="footer">
+        <div class="footerLogo">
+            <img src="~/img/ss.png" alt="">
+        </div>
+        <div class="footerContact">
+            <h2>KONTAKT</h2>
+            <ul>
+                <li>E-Mail: sigma@gmail.com</li>
+                <li>Recepcja: 000-00-000-00</li>
+                <li>Adres: Waleniakonia 12</li>
+            </ul>
+        </div>
+        <div class="footerLinks">
+            <ul>
+                <li class="footerLink"><a href="#aboutUs">O NAS</a></li>
+                <li class="footerLink"><a href="#rooms2">POKOJE</a></li>
+                <li class="footerLink"><a href="#gallery">GALERIA</a></li>
+                <li class="footerLink"><a href="glowna">STRONA GŁÓWNA</a></li>
+                <li class="footerLink"><a href="rezerwacja">REZERWACJA</a></li>
+                <li class="footerLink"><a href="#footer">KONTAKT</a></li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,6 +1,10 @@
 ﻿/* =========================================
 Do 90 linii to wszyskto jest logowanie
 ========================================= */
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -316,6 +320,8 @@ header {
     color: #FFBE46;
     padding: 30px;
     border-bottom: 4px solid #FFBE46;
+    position: sticky;
+    top: 0;
 }
 
 .mainList {
@@ -328,7 +334,7 @@ header {
 }
 
 .background {
-    background-image: url("pexels-pixabay-258154.jpg");
+    background-image: url("../img/pexels-pixabay-258154.jpg");
     background-color: #cccccc;
     height: 820px;
     background-position: center;
@@ -399,4 +405,216 @@ header {
 
 .logoSigmy {
     width: 80px;
+}
+
+a {
+    text-decoration: none;
+    color: #FFD700;
+}
+
+    a:hover {
+        color: white;
+    }
+
+#aboutUs {
+    margin-top: 450px;
+    padding-bottom: 265px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.aboutRight, .aboutLeft {
+    width: 40%;
+}
+
+    .aboutRight > img {
+        width: 800px;
+        border-radius: 30px;
+    }
+
+.aboutLeft {
+    padding: 30px;
+    font-size: 26px;
+}
+
+h2 {
+    color: #FFD700;
+    font-size: 40px;
+    text-align: center;
+    padding-bottom: 35px;
+}
+
+#rooms2 > div > img {
+    width: 450px;
+    border-radius: 20px;
+    transition: .3s;
+}
+
+#rooms2 {
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 200px;
+    width: 100%;
+}
+
+    #rooms2 > div > img:hover {
+        width: 460px;
+        transition: .3s;
+    }
+
+.coupleRoom, .familyRoom, .premiumRoom {
+    text-align: center;
+    width: 33%;
+}
+
+    .coupleRoom, .familyRoom, .premiumRoom > p {
+        font-size: 20px;
+    }
+
+#footer {
+    height: 500px;
+    background-color: #0C122E;
+    margin-top: 238%;
+    display: flex;
+    border-top: 4px solid #FFBE46;
+}
+
+.footerLogo, .footerContact, .footerLinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 33%;
+}
+
+.footerContact {
+    flex-direction: column;
+    color: white;
+}
+
+.mainContent {
+    background-color: rgba(6, 6, 24, 0.5);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: repeat(9,300px);
+}
+
+.items1 {
+    background-image: url('../img//legs.gif');
+    background-size: cover;
+}
+
+.items2 {
+    background-color: #fffeeb;
+}
+
+.items3 {
+    grid-column: 3/5;
+    grid-row: 1/5;
+    background-image: url('../img/basen.jpg');
+}
+
+.items4 {
+    grid-column: 1/3;
+    grid-row: 2/5;
+    background-image: url('../img/basen2.jpg');
+}
+
+.items5 {
+    grid-area: 4/3/4/3;
+    background-color: #fffeeb;
+}
+
+.items6 {
+    grid-column: 1/4;
+    grid-row: 5/7;
+    background-image: url('../img/basen3.jpg');
+}
+
+.items7 {
+    background-image: url('../img/sauna.jpg');
+    background-position: center;
+}
+
+.items9 {
+    grid-area: 6/1/6/1;
+    background-color: #fffeeb;
+}
+
+.items8 {
+    background-color: #fffeeb;
+}
+
+.items10 {
+    grid-column: 1/3;
+    grid-row: 7/10;
+    background-image: url('../img/swim.gif');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.items11 {
+    grid-area: 7/2/8/2;
+    background-color: #fffeeb;
+}
+
+.items12 {
+    grid-column: 3/5;
+    grid-row: 7/9;
+    background-image: url('../img/grota.jpg');
+}
+
+.items13 {
+    background-color: #fffeeb;
+}
+
+.items14 {
+    background-image: url('../img/grota2.jpg');
+}
+
+.items11, .items8, .items13, .items5, .items2, .items9 {
+    text-align: center;
+    padding: 30px;
+}
+
+    .items2 > ul > li {
+        padding: 10px;
+        letter-spacing: 2px;
+    }
+
+.profileBox {
+    display: flex;
+}
+
+.leftProfile {
+    width: 200px;
+    height: 70vh;
+    border-radius: 15px;
+    box-shadow: 2px 2px 2px 2px gray;
+    margin: 30px;
+}
+
+.userProfile {
+    height: 150px;
+    background-color: #0C122E;
+    text-align: center;
+}
+
+.profileName {
+    color: #0C122E;
+}
+
+.profile-text {
+    padding: 15px;
+}
+
+.RightProfile {
+    width: 80%;
+    height: 70vh;
+    box-shadow: 2px 2px 2px 2px gray;
+    margin: 30px;
+    border-radius: 15px;
 }
