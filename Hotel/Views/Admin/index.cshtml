@@ -10,13 +10,14 @@
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 </head>
 <body class="adminPanel">
-    <main>
+    <main class="main-container">
         <div class="box">
-            <div class="leftPanel">
+            <!-- Lewy panel -->
+            <aside class="leftPanel">
                 <div class="Up">
-                    <img src="~/img/ss.png" alt="" class="logoSigmy">
+                    <img src="~/img/ss.png" alt="Logo SS-IGMA" class="logoSigmy">
                 </div>
-                <div class="Down">
+                <nav class="Down">
                     <ul>
                         <li><a href="" class="adminList">Dashboard</a></li>
                         <li><a href="" class="adminList">Main Menu</a></li>
@@ -24,18 +25,16 @@
                         <li><a href="" class="adminList">Booking</a></li>
                         <li><a href="" class="adminList">Baza danych</a></li>
                     </ul>
-                </div>
+                </nav>
+            </aside>
 
-            </div>
-
-            <div class="rightPanel">
-
+            <!-- Prawy panel -->
+            <section class="rightPanel">
                 <div class="info">
-                    <p>100</p>
+                    <p class="info-number">100</p>
                     <p>Zarezerwowanych pokoi</p>
                 </div>
-
-            </div>
+            </section>
         </div>
     </main>
 </body>

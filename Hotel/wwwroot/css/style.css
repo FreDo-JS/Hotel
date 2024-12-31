@@ -143,6 +143,7 @@ ADMIN PANEL
 VVVVVVVVVVVVVVVVVVVV
 =============================================== */
 
+
 .leftPanel {
     background-color: white;
     width: 200px;
@@ -151,6 +152,7 @@ VVVVVVVVVVVVVVVVVVVV
     box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
     border-radius: 15px;
 }
+
 
 .Up {
     color: #FFBE46;
@@ -177,33 +179,27 @@ li {
     color: #0C122E;
 }
 
-    .adminList:hover {
+.adminList:hover {
         color: #FFBE46;
-    }
+}
 
 .adminPanel {
     justify-content: flex-start;
     padding-left: 20px;
 }
 
+
 .rightPanel {
-    width: 1600px;
-    height: 700px;
-    background-color: white;
+    flex: 1;
     padding: 20px;
-    margin: 20px;
-    /* margin-top: 100px; */
-    position: relative;
-    top: 60px;
-    border-radius: 15px;
-    -webkit-box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
-    -moz-box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
-    box-shadow: 3px 1px 32px 6px rgba(66, 68, 90, 1);
-    display: flex;
+    overflow: auto;
 }
+
 
 .box {
     display: flex;
+    gap: 20px;
+    padding: 20px;
 }
 
 .info {
@@ -228,9 +224,10 @@ li {
     width: 300px;
 }
 
+
 .flex {
     display: flex;
-    text-align: center;
+    justify-content: space-between;
 }
 
 .inputChange > input {
@@ -617,4 +614,12 @@ h2 {
     box-shadow: 2px 2px 2px 2px gray;
     margin: 30px;
     border-radius: 15px;
+}
+.user-info {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
 }
