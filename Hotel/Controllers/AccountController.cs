@@ -49,10 +49,15 @@ public class AccountController : Controller
 
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
-            }
 
-            // Zakładamy, że na podstawie UID tworzymy sesję użytkownika
-            HttpContext.Session.SetString("UserId", uid);
+                // Zapisz ID nowego użytkownika w sesji
+                HttpContext.Session.SetString("UserId", newUser.Id.ToString());
+            }
+            else
+            {
+                // Zapisz ID istniejącego użytkownika w sesji
+                HttpContext.Session.SetString("UserId", existingUser.Id.ToString());
+            }
 
             // Przechowaj dane użytkownika w sesji
             if (!string.IsNullOrEmpty(name))
@@ -77,6 +82,7 @@ public class AccountController : Controller
             return Json(new { success = false, message = ex.Message });
         }
     }
+
 
     public IActionResult UserProfile()
     {

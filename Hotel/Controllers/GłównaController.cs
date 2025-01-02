@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Hotel.Views.UserPanel
+namespace Hotel.Controllers
 {
-    public class UserPanelController : Controller
+    public class GłównaController : Controller
     {
         public IActionResult Index()
         {

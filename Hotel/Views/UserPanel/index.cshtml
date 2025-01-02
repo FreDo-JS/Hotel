@@ -1,7 +1,4 @@
-﻿@{
-    Layout = null;
-}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,10 +11,51 @@
         <img src="~/img/ss.png" alt="logo">
     </header>
     <main>
-        <h1 class="profile-text">Witaj na swoim koncie <span class="profileName">szefiku</span></h1>
+        <h1 class="profile-text">Witaj na swoim koncie <span class="profileName">@ViewBag.UserName</span></h1>
         <div class="profileBox">
             <div class="leftProfile">
                 <ul>
+
+                    <li><a href="#mojeKonto">Moje konto</a></li>
+                    <li><a href="#historiaRezerwacji">Historia rezerwacji</a></li>
+                    <li><a href="#uslugiDodatkowe">Usługi dodatkowe</a></li>
+                </ul>
+            </div>
+            <div class="RightProfile">
+                <h2 id="mojeKonto">Twoje dane</h2>
+                <p>Imię: <span>@ViewBag.FirstName</span></p>
+                <p>Nazwisko: <span>@ViewBag.LastName</span></p>
+                <p>Email: <span>@ViewBag.Email</span></p>
+
+                <h2 id="historiaRezerwacji">Historia rezerwacji</h2>
+                @if (ViewBag.Reservations != null && ViewBag.Reservations.Count > 0)
+                {
+                    <ul>
+                        @foreach (var reservation in ViewBag.Reservations)
+                        {
+                            <li>
+                                Pokój: <strong>@reservation.RoomNumber</strong><br>
+                                Numer rezerwacji: <strong>@reservation.ReservationId</strong> <br>
+                                Termin: @reservation.CheckInDate.ToString("yyyy-MM-dd") - @reservation.CheckOutDate.ToString("yyyy-MM-dd")<br>
+                                Status: <strong>@reservation.Status</strong>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>Brak historii rezerwacji.</p>
+                }
+
+                <h2 id="uslugiDodatkowe">Usługi</h2>
+                <p>
+                    W sprawie usług prosimy naszych użytkowników o kontakt drogą telefoniczną:
+                    <strong>0700 666 21</strong>
+                </p>
+            </div>
+        </div>
+    </main>
+
                     <li><a href="#" data-section="account">Moje konto</a></li>
                     <li><a href="#" data-section="history">Historia rezerwacji</a></li>
                     <li><a href="#" data-section="services">Usługi dodatkowe</a></li>
@@ -34,47 +72,5 @@
         </div>
     </main>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const links = document.querySelectorAll(".leftProfile a");
-            const rightProfile = document.getElementById("RightProfile");
-
-            // Dane do wypełnienia prawego panelu
-            const sections = {
-                account: `
-                    <h2>Twoje dane</h2>
-                    <p>Imię: <span>Jan</span></p>
-                    <p>Nazwisko: <span>Kowalski</span></p>
-                    <p>Email: <span>jan.kowalski@example.com</span></p>
-                    <p>Hasło: ******</p>
-                `,
-                history: `
-                    <h2>Historia rezerwacji</h2>
-                    <p>Rezerwacja dnia: <span>12-01-2025</span></p>
-                    <p>Rezerwacja dnia: <span>18-12-2024</span></p>
-                    <p>Rezerwacja dnia: <span>30-11-2024</span></p>
-                `,
-                services: `
-                    <h2>Usługi dodatkowe</h2>
-                    <p>
-                        W sprawie usług prosimy naszych użytkowników o kontakt drogą telefoniczną
-                        <strong>0700 666 21</strong>
-                    </p>
-                    <p>Możesz również wysłać zapytanie na email: <strong>kontakt@example.com</strong></p>
-                `
-            };
-
-            // Obsługa kliknięcia w link
-            links.forEach(link => {
-                link.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    const section = this.dataset.section;
-
-                    // Zmień zawartość prawego panelu na podstawie wybranej sekcji
-                    rightProfile.innerHTML = sections[section] || `<p>Nie znaleziono danych do wyświetlenia.</p>`;
-                });
-            });
-        });
-    </script>
 </body>
 </html>
