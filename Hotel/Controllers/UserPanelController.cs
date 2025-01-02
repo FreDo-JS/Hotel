@@ -1,0 +1,62 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
+using Hotel.Data;
+
+namespace Hotel.Controllers
+{
+    public class UserPanelController : Controller
+    {
+        private readonly HotelDbContext _context;
+
+        public UserPanelController(HotelDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            // Pobierz UserId z sesji
+            var userIdString = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
+            {
+                Console.WriteLine("Nieprawidłowy UserId w sesji.");
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Pobierz użytkownika z bazy danych
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                Console.WriteLine($"Nie znaleziono użytkownika o UserId: {userId}");
+                return RedirectToAction("Login", "Account");
+            }
+
+
+            ViewBag.UserName = user.Name;
+            ViewBag.FirstName = user.Name?.Split(' ')[0] ?? "Nieznane";
+            ViewBag.LastName = user.Name?.Split(' ').Length > 1 ? user.Name.Split(' ')[1] : "Nieznane";
+            ViewBag.Email = user.Email;
+
+            // Pobierz historię rezerwacji użytkownika
+            var reservations = await _context.Reservations
+                .Where(r => r.UserId == userId)
+                .Include(r => r.Room)
+                .Select(r => new
+                {
+                    ReservationId = r.Id,
+                    RoomNumber = r.Room.RoomNumber,
+                    CheckInDate = r.CheckInDate,
+                    CheckOutDate = r.CheckOutDate,
+                    Status = r.Status
+                })
+                .ToListAsync();
+
+            ViewBag.Reservations = reservations;
+
+            return View();
+        }
+
+    }
+}

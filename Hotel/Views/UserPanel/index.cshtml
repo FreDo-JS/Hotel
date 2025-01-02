@@ -1,7 +1,4 @@
-﻿@{
-    Layout = null;
-}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,36 +11,48 @@
         <img src="~/img/ss.png" alt="logo">
     </header>
     <main>
-        <h1 class="profile-text">Witaj na swoim koncie <span class="profileName">szefiku</span></h1>
+        <h1 class="profile-text">Witaj na swoim koncie <span class="profileName">@ViewBag.UserName</span></h1>
         <div class="profileBox">
             <div class="leftProfile">
                 <ul>
-                    <li><a href="">Moje konto</a></li>
-                    <li><a href="">Historia rezerwacji</a></li>
-                    <li><a href="">Usługi dodatkowe</a></li>
+                    <li><a href="#mojeKonto">Moje konto</a></li>
+                    <li><a href="#historiaRezerwacji">Historia rezerwacji</a></li>
+                    <li><a href="#uslugiDodatkowe">Usługi dodatkowe</a></li>
                 </ul>
             </div>
             <div class="RightProfile">
-                <h2>Twoje dane</h2>
-                <p>Imię: <span>Tu wstawiamy z bazy</span></p>
-                <p>Nazwisko: <span>Tu wstawiamy z bazy</span></p>
-                <p>Email: <span>Z bazy</span></p>
-                <p>Hasło: CHUJ CIE TO</p>
+                <h2 id="mojeKonto">Twoje dane</h2>
+                <p>Imię: <span>@ViewBag.FirstName</span></p>
+                <p>Nazwisko: <span>@ViewBag.LastName</span></p>
+                <p>Email: <span>@ViewBag.Email</span></p>
 
-                <!-- Mozna dodać jakieś bzdety byle by były jakieś informacje o osobie z bazy -->
+                <h2 id="historiaRezerwacji">Historia rezerwacji</h2>
+                @if (ViewBag.Reservations != null && ViewBag.Reservations.Count > 0)
+                {
+                    <ul>
+                        @foreach (var reservation in ViewBag.Reservations)
+                        {
+                            <li>
+                                Pokój: <strong>@reservation.RoomNumber</strong><br>
+                                Numer rezerwacji: <strong>@reservation.ReservationId</strong> <br>
+                                Termin: @reservation.CheckInDate.ToString("yyyy-MM-dd") - @reservation.CheckOutDate.ToString("yyyy-MM-dd")<br>
+                                Status: <strong>@reservation.Status</strong>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>Brak historii rezerwacji.</p>
+                }
 
-                <h2>Historia rezerwacji</h2>
-                <p>Rezerwacja dnia: <span>cos wymyslimy</span></p>
-
-                <h2>Usługi</h2>
+                <h2 id="uslugiDodatkowe">Usługi</h2>
                 <p>
-                    W sprawie usług prosimy naszych użytkowników o kontakt drogą telefoniczną
-                    0700 666 21
+                    W sprawie usług prosimy naszych użytkowników o kontakt drogą telefoniczną:
+                    <strong>0700 666 21</strong>
                 </p>
             </div>
         </div>
-
-
     </main>
 </body>
 </html>
