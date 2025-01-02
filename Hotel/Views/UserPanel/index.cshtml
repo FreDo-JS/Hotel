@@ -18,32 +18,63 @@
         <div class="profileBox">
             <div class="leftProfile">
                 <ul>
-                    <li><a href="">Moje konto</a></li>
-                    <li><a href="">Historia rezerwacji</a></li>
-                    <li><a href="">Usługi dodatkowe</a></li>
+                    <li><a href="#" data-section="account">Moje konto</a></li>
+                    <li><a href="#" data-section="history">Historia rezerwacji</a></li>
+                    <li><a href="#" data-section="services">Usługi dodatkowe</a></li>
                 </ul>
             </div>
-            <div class="RightProfile">
+            <div class="RightProfile" id="RightProfile">
+                <!-- Domyślna zawartość -->
                 <h2>Twoje dane</h2>
-                <p>Imię: <span>Tu wstawiamy z bazy</span></p>
-                <p>Nazwisko: <span>Tu wstawiamy z bazy</span></p>
-                <p>Email: <span>Z bazy</span></p>
-                <p>Hasło: CHUJ CIE TO</p>
-
-                <!-- Mozna dodać jakieś bzdety byle by były jakieś informacje o osobie z bazy -->
-
-                <h2>Historia rezerwacji</h2>
-                <p>Rezerwacja dnia: <span>cos wymyslimy</span></p>
-
-                <h2>Usługi</h2>
-                <p>
-                    W sprawie usług prosimy naszych użytkowników o kontakt drogą telefoniczną
-                    0700 666 21
-                </p>
+                <p>Imię: <span>Jan</span></p>
+                <p>Nazwisko: <span>Kowalski</span></p>
+                <p>Email: <span>jan.kowalski@example.com</span></p>
+                <p>Hasło: ******</p>
             </div>
         </div>
-
-
     </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const links = document.querySelectorAll(".leftProfile a");
+            const rightProfile = document.getElementById("RightProfile");
+
+            // Dane do wypełnienia prawego panelu
+            const sections = {
+                account: `
+                    <h2>Twoje dane</h2>
+                    <p>Imię: <span>Jan</span></p>
+                    <p>Nazwisko: <span>Kowalski</span></p>
+                    <p>Email: <span>jan.kowalski@example.com</span></p>
+                    <p>Hasło: ******</p>
+                `,
+                history: `
+                    <h2>Historia rezerwacji</h2>
+                    <p>Rezerwacja dnia: <span>12-01-2025</span></p>
+                    <p>Rezerwacja dnia: <span>18-12-2024</span></p>
+                    <p>Rezerwacja dnia: <span>30-11-2024</span></p>
+                `,
+                services: `
+                    <h2>Usługi dodatkowe</h2>
+                    <p>
+                        W sprawie usług prosimy naszych użytkowników o kontakt drogą telefoniczną
+                        <strong>0700 666 21</strong>
+                    </p>
+                    <p>Możesz również wysłać zapytanie na email: <strong>kontakt@example.com</strong></p>
+                `
+            };
+
+            // Obsługa kliknięcia w link
+            links.forEach(link => {
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const section = this.dataset.section;
+
+                    // Zmień zawartość prawego panelu na podstawie wybranej sekcji
+                    rightProfile.innerHTML = sections[section] || `<p>Nie znaleziono danych do wyświetlenia.</p>`;
+                });
+            });
+        });
+    </script>
 </body>
 </html>
