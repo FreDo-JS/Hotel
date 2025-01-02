@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Hotel.Views.Główna
+namespace Hotel.Controllers
 {
     public class GłównaController : Controller
     {
