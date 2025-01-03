@@ -14,7 +14,7 @@
     <main>
         <section>
             <h2>Użytkownicy</h2>
-            <table class="data-table">
+            <table class="data-table" id="userTable">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -22,76 +22,249 @@
                         <th>Email</th>
                         <th>Rola</th>
                         <th>Utworzono</th>
+                        <th>Akcje</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var user in ViewBag.Users)
                     {
-                        <tr>
+                        <tr data-id="@user.Id">
                             <td>@user.Id</td>
-                            <td>@user.Name</td>
-                            <td>@user.Email</td>
-                            <td>@user.Role</td>
+                            <td class="editable" data-column="Name">@user.Name</td>
+                            <td class="editable" data-column="Email">@user.Email</td>
+                            <td class="editable" data-column="Role">@user.Role</td>
                             <td>@user.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>
+                                <button onclick="editRow(this)">Edytuj</button>
+                                <button onclick="saveRow(this)" style="display:none;">Zapisz</button>
+                            </td>
                         </tr>
                     }
                 </tbody>
+
             </table>
         </section>
 
+
         <section>
-            <h2>Pokoje</h2>
-            <table class="data-table">
+            <h2>Lista Pokoi</h2>
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Numer Pokoju</th>
                         <th>Piętro</th>
                         <th>Status</th>
+                        <th>Opcje</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var room in ViewBag.Rooms)
                     {
-                        <tr>
+                        <tr data-id="@room.Id">
                             <td>@room.Id</td>
-                            <td>@room.RoomNumber</td>
-                            <td>@room.Floor</td>
-                            <td>@room.Status</td>
+                            <td class="editable" data-column="RoomNumber">@room.RoomNumber</td>
+                            <td class="editable" data-column="Floor">@room.Floor</td>
+                            <td class="editable" data-column="Status">@room.Status</td>
+                            <td>
+                                <button onclick="editRoomRow(this)">Edytuj</button>
+                                <button onclick="saveRoomRow(this)" style="display:none;">Zapisz</button>
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
+
         </section>
 
         <section>
-            <h2>Rezerwacje</h2>
-            <table class="data-table">
+            <h2>Lista Rezerwacji</h2>
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Użytkownik</th>
                         <th>Pokój</th>
+                        <th>Użytkownik</th>
                         <th>Data Przyjazdu</th>
                         <th>Data Wyjazdu</th>
                         <th>Status</th>
+                        <th>Opcje</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var reservation in ViewBag.Reservations)
                     {
-                        <tr>
+                        <tr data-id="@reservation.Id">
                             <td>@reservation.Id</td>
-                            <td>@reservation.User?.Name"</td>
-                            <td>@reservation.Room?.RoomNumber"</td>
-                            <td>@reservation.CheckInDate.ToString("yyyy-MM-dd")</td>
-                            <td>@reservation.CheckOutDate.ToString("yyyy-MM-dd")</td>
-                            <td>@reservation.Status</td>
+                            <td class="editable" data-column="RoomId">@reservation.Room.RoomNumber</td>
+                            <td>@reservation.User.Name</td>
+                            <td class="editable" data-column="CheckInDate">@reservation.CheckInDate.ToString("yyyy-MM-dd")</td>
+                            <td class="editable" data-column="CheckOutDate">@reservation.CheckOutDate.ToString("yyyy-MM-dd")</td>
+                            <td class="editable" data-column="Status">@reservation.Status</td>
+                            <td>
+                                <button onclick="editReservationRow(this)">Edytuj</button>
+                                <button onclick="saveReservationRow(this)" style="display:none;">Zapisz</button>
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
+
         </section>
     </main>
 </body>
 </html>
+<script>
+    function editRow(button) {
+        const row = button.closest("tr");
+        row.querySelectorAll(".editable").forEach(cell => {
+            const column = cell.getAttribute("data-column"); // Dodajemy atrybut do określenia pola
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = cell.textContent.trim();
+            input.setAttribute("name", column); // Ustawiamy nazwę, która później będzie kluczem
+            cell.textContent = "";
+            cell.appendChild(input);
+        });
+        button.style.display = "none";
+        row.querySelector("button[onclick='saveRow(this)']").style.display = "inline";
+    }
+
+    async function saveRow(button) {
+        const row = button.closest("tr");
+        const id = row.getAttribute("data-id");
+        const updatedData = {};
+
+        // Pobierz wartości z pól edycji
+        row.querySelectorAll(".editable").forEach(cell => {
+            const input = cell.querySelector("input");
+            const column = input.getAttribute("name");
+            updatedData[column] = input.value.trim();
+            cell.textContent = input.value.trim();
+        });
+
+        console.log("Dane do zapisania:", updatedData);
+
+        // Wyślij dane do serwera
+        try {
+            const response = await fetch(`/Service/UpdateUser/${id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedData)
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert("Dane zostały zaktualizowane.");
+            } else {
+                alert(data.message || "Wystąpił błąd podczas aktualizacji.");
+            }
+        } catch (error) {
+            console.error("Błąd podczas aktualizacji danych:", error);
+        }
+
+        button.style.display = "none";
+        row.querySelector("button[onclick='editRow(this)']").style.display = "inline";
+    }
+    function editRoomRow(button) {
+        const row = button.closest("tr");
+        row.querySelectorAll(".editable").forEach(cell => {
+            const column = cell.getAttribute("data-column");
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = cell.textContent.trim();
+            input.setAttribute("name", column);
+            cell.textContent = "";
+            cell.appendChild(input);
+        });
+        button.style.display = "none";
+        row.querySelector("button[onclick='saveRoomRow(this)']").style.display = "inline";
+    }
+
+    async function saveRoomRow(button) {
+        const row = button.closest("tr");
+        const id = row.getAttribute("data-id");
+        const updatedData = {};
+
+        row.querySelectorAll(".editable").forEach(cell => {
+            const input = cell.querySelector("input");
+            const column = input.getAttribute("name");
+            updatedData[column] = input.value.trim();
+            cell.textContent = input.value.trim();
+        });
+
+        try {
+            const response = await fetch(`/Service/UpdateRoom/${id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedData)
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert("Dane zostały zaktualizowane.");
+            } else {
+                alert(data.message || "Wystąpił błąd podczas aktualizacji.");
+            }
+        } catch (error) {
+            console.error("Błąd podczas aktualizacji danych:", error);
+        }
+
+        button.style.display = "none";
+        row.querySelector("button[onclick='editRoomRow(this)']").style.display = "inline";
+    }
+    function editReservationRow(button) {
+        const row = button.closest("tr");
+        row.querySelectorAll(".editable").forEach(cell => {
+            const column = cell.getAttribute("data-column");
+            const input = document.createElement("input");
+            input.type = column === "CheckInDate" || column === "CheckOutDate" ? "date" : "text";
+            input.value = cell.textContent.trim();
+            input.setAttribute("name", column);
+            cell.textContent = "";
+            cell.appendChild(input);
+        });
+        button.style.display = "none";
+        row.querySelector("button[onclick='saveReservationRow(this)']").style.display = "inline";
+    }
+
+    async function saveReservationRow(button) {
+        const row = button.closest("tr");
+        const id = row.getAttribute("data-id");
+        const updatedData = {};
+
+        row.querySelectorAll(".editable").forEach(cell => {
+            const input = cell.querySelector("input");
+            const column = input.getAttribute("name");
+            updatedData[column] = input.value.trim();
+            cell.textContent = input.value.trim();
+        });
+
+        try {
+            const response = await fetch(`/Service/UpdateReservation/${id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedData)
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert("Dane zostały zaktualizowane.");
+            } else {
+                alert(data.message || "Wystąpił błąd podczas aktualizacji.");
+            }
+        } catch (error) {
+            console.error("Błąd podczas aktualizacji danych:", error);
+        }
+
+        button.style.display = "none";
+        row.querySelector("button[onclick='editReservationRow(this)']").style.display = "inline";
+    }
+
+</script>
