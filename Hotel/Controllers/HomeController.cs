@@ -30,7 +30,6 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Kod QR jest wymagany." });
             }
 
-            // ZnajdŸ rezerwacjê na podstawie kodu QR
             var reservation = await _context.Reservations
                 .Include(r => r.Room)
                 .FirstOrDefaultAsync(r => r.QRCode == qrCodeDto.QrCode);
@@ -42,6 +41,7 @@ namespace Hotel.Controllers
 
             return Json(new { success = true, roomNumber = reservation.Room.RoomNumber });
         }
+
 
         public class QrCodeDto
         {
@@ -122,6 +122,7 @@ namespace Hotel.Controllers
             if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
             {
                 return Json(new { success = false, message = "Musisz byæ zalogowany, aby dokonaæ rezerwacji." });
+
             }
 
             // Utwórz now¹ rezerwacjê bez przypisania pokoju

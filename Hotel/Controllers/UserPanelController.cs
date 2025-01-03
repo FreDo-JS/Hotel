@@ -22,7 +22,7 @@ namespace Hotel.Controllers
             if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
             {
                 Console.WriteLine("Nieprawidłowy UserId w sesji.");
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("", "login");
             }
 
             // Pobierz użytkownika z bazy danych
@@ -30,7 +30,7 @@ namespace Hotel.Controllers
             if (user == null)
             {
                 Console.WriteLine($"Nie znaleziono użytkownika o UserId: {userId}");
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("", "login");
             }
 
 
@@ -56,6 +56,39 @@ namespace Hotel.Controllers
             ViewBag.Reservations = reservations;
 
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ChangeRole(string newRole)
+        {
+            // Pobierz UserId z sesji
+            var userIdString = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
+            {
+                TempData["Error"] = "Nie można zidentyfikować użytkownika. Zaloguj się ponownie.";
+                return RedirectToAction("Index");
+            }
+
+            // Pobierz użytkownika z bazy danych
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                TempData["Error"] = "Nie znaleziono użytkownika.";
+                return RedirectToAction("Index");
+            }
+
+            // Sprawdź, czy rola jest poprawna
+            if (newRole == "rezydent" || newRole == "pracownik" || newRole == "administrator")
+            {
+                user.Role = newRole;
+                await _context.SaveChangesAsync();
+                TempData["Success"] = $"Rola została zmieniona na {newRole}.";
+            }
+            else
+            {
+                TempData["Error"] = "Wybrano nieprawidłową rolę.";
+            }
+
+            return RedirectToAction("Index");
         }
 
     }
