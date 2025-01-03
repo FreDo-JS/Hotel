@@ -226,6 +226,7 @@ async function sendQrCode() {
     }
 }
 
+
 console.log("Przesyłane dane:", JSON.stringify({ reservationId: parseInt(reservationId), email: email }));
 
 

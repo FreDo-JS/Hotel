@@ -1,0 +1,137 @@
+﻿.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+    .data-table th, .data-table td {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+    }
+
+    .data-table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+    }
+
+    .data-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+    button[onclick="saveRow(this)"] {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    button[onclick="editRow(this)"] {
+        background-color: #f0ad4e;
+        color: white;
+    }
+/* Ogólne stylowanie tabeli */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+    table thead tr {
+        background-color: #009879;
+        color: #ffffff;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    table th, table td {
+        padding: 12px 15px;
+        border: 1px solid #dddddd;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: #f3f3f3;
+    }
+
+    table tbody tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+
+/* Stylowanie przycisków */
+button {
+    background-color: #009879;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+    button:hover {
+        background-color: #007b63;
+    }
+
+    button[disabled] {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
+/* Stylowanie komórek edytowalnych */
+.editable input {
+    width: 90%;
+    padding: 6px;
+    font-size: 16px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+}
+
+/* Nagłówki */
+h2, h1 {
+    color: #333333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Tło dla głównej sekcji */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+}
+
+main {
+    max-width: 1200px;
+    margin: auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Stylowanie wiadomości */
+.alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}

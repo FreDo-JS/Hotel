@@ -394,6 +394,174 @@ namespace Hotel.Controllers
 
 
         }
+        [HttpGet]
+        public async Task<IActionResult> ManagePendingReservations()
+        {
+            // Pobierz niepotwierdzone rezerwacje
+            var pendingReservations = await _context.Reservations
+                .Where(r => r.Status == "niepotwierdzona")
+                .Include(r => r.User)
+                .ToListAsync();
+
+            // Pobierz listę dostępnych pokoi
+            var availableRooms = await _context.Rooms
+                .Where(r => !_context.Reservations.Any(res => res.RoomId == r.Id && res.Status == "potwierdzona"))
+                .ToListAsync();
+
+            ViewBag.PendingReservations = pendingReservations.Select(r => new
+            {
+                ReservationId = r.Id,
+                LastName = r.LastName,
+                CheckInDate = r.CheckInDate,
+                CheckOutDate = r.CheckOutDate,
+                Status = r.Status
+            }).ToList();
+
+            ViewBag.AvailableRooms = availableRooms.Select(r => new
+            {
+                Id = r.Id,
+                RoomNumber = r.RoomNumber
+            }).ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmReservation(int reservationId, int roomId, [FromServices] EmailService emailService)
+        {
+            // Pobierz rezerwację na podstawie ID
+            var reservation = await _context.Reservations.Include(r => r.User).FirstOrDefaultAsync(r => r.Id == reservationId);
+            if (reservation == null)
+            {
+                TempData["Error"] = "Nie znaleziono rezerwacji.";
+                return RedirectToAction(nameof(ManagePendingReservations));
+            }
+
+            // Przypisz pokój do rezerwacji
+            var room = await _context.Rooms.FirstOrDefaultAsync(r => r.Id == roomId);
+            if (room == null)
+            {
+                TempData["Error"] = "Nie znaleziono pokoju.";
+                return RedirectToAction(nameof(ManagePendingReservations));
+            }
+
+            reservation.RoomId = roomId;
+            reservation.Status = "potwierdzona";
+
+            // Generowanie losowego kodu QR
+            reservation.QRCode = GenerateRandomCode();
+
+            await _context.SaveChangesAsync();
+
+            // Wyślij e-mail z kodem QR
+            if (reservation.User != null && !string.IsNullOrEmpty(reservation.User.Email))
+            {
+                try
+                {
+                    Console.WriteLine($"Wysyłanie kodu QR na adres: {reservation.User.Email}");
+                    await emailService.SendEmailWithQrCode(reservation.User.Email, reservation.QRCode);
+                    TempData["Success"] = $"Rezerwacja {reservationId} potwierdzona i kod QR został wysłany na adres {reservation.User.Email}.";
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Błąd podczas wysyłania e-maila: {ex.Message}");
+                    TempData["Error"] = $"Rezerwacja {reservationId} została potwierdzona, ale nie udało się wysłać kodu QR.";
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Nie znaleziono adresu e-mail użytkownika.";
+            }
+
+            return RedirectToAction(nameof(ManagePendingReservations));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DatabaseOverview()
+        {
+            // Pobierz dane z tabel
+            var users = await _context.Users.ToListAsync();
+            var rooms = await _context.Rooms.ToListAsync();
+            var reservations = await _context.Reservations.Include(r => r.User).Include(r => r.Room).ToListAsync();
+
+            // Przekaż dane do widoku
+            ViewBag.Users = users;
+            ViewBag.Rooms = rooms;
+            ViewBag.Reservations = reservations;
+
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto updatedUser)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return Json(new { success = false, message = "Nie znaleziono użytkownika." });
+            }
+
+            // Sprawdzamy i aktualizujemy właściwości
+            user.Name = string.IsNullOrWhiteSpace(updatedUser.Name) ? user.Name : updatedUser.Name;
+            user.Email = string.IsNullOrWhiteSpace(updatedUser.Email) ? user.Email : updatedUser.Email;
+            user.Role = string.IsNullOrWhiteSpace(updatedUser.Role) ? user.Role : updatedUser.Role;
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        public class UserDto
+        {
+            public string? Name { get; set; }
+            public string? Email { get; set; }
+            public string? Role { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateRoom(int id, [FromBody] RoomDto updatedRoom)
+        {
+            var room = await _context.Rooms.FirstOrDefaultAsync(r => r.Id == id);
+            if (room == null)
+            {
+                return Json(new { success = false, message = "Nie znaleziono pokoju." });
+            }
+
+            room.RoomNumber = int.Parse(updatedRoom.RoomNumber);
+            room.Floor = int.Parse(updatedRoom.Floor);
+            room.Status = updatedRoom.Status;
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        public class RoomDto
+        {
+            public string? RoomNumber { get; set; }
+            public string? Floor { get; set; }
+            public string? Status { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateReservation(int id, [FromBody] ReservationDto updatedReservation)
+        {
+            var reservation = await _context.Reservations.Include(r => r.Room).FirstOrDefaultAsync(r => r.Id == id);
+            if (reservation == null)
+            {
+                return Json(new { success = false, message = "Nie znaleziono rezerwacji." });
+            }
+
+            reservation.CheckInDate = updatedReservation.CheckInDate;
+            reservation.CheckOutDate = updatedReservation.CheckOutDate;
+            reservation.Status = updatedReservation.Status;
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        
+
+
 
 
         public class ReservationEmailDto
@@ -421,6 +589,7 @@ namespace Hotel.Controllers
         public int RoomNumber { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
+        public string? Status { get; set; }
     }
 
 }

@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zarządzanie niepotwierdzonymi rezerwacjami</title>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+</head>
+<body>
+    <header>
+        <h1>Zarządzanie niepotwierdzonymi rezerwacjami</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Oczekujące rezerwacje</h2>
+            @if (ViewBag.PendingReservations != null && ViewBag.PendingReservations.Count > 0)
+            {
+                <table class="pending-reservations">
+                    <thead>
+                        <tr>
+                            <th>Numer Rezerwacji</th>
+                            <th>Nazwisko</th>
+                            <th>Data Przyjazdu</th>
+                            <th>Data Wyjazdu</th>
+                            <th>Status</th>
+                            <th>Opcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var reservation in ViewBag.PendingReservations)
+                        {
+                            <tr>
+                                <td>@reservation.ReservationId</td>
+                                <td>@reservation.LastName</td>
+                                <td>@reservation.CheckInDate.ToString("yyyy-MM-dd")</td>
+                                <td>@reservation.CheckOutDate.ToString("yyyy-MM-dd")</td>
+                                <td>@reservation.Status</td>
+                                <td>
+                                    <form method="post" action="/Service/ConfirmReservation">
+                                        <input type="hidden" name="reservationId" value="@reservation.ReservationId">
+                                        <label>
+                                            Pokój:
+                                            <select name="roomId">
+                                                <option value="">Wybierz</option>
+                                                @foreach (var room in ViewBag.AvailableRooms)
+                                                {
+                                                    <option value="@room.Id">@room.RoomNumber</option>
+                                                }
+                                            </select>
+                                        </label>
+                                        <button type=" submit">Potwierdź</button>
+                                    </form>
+                                    <form method="post" action="/Service/RejectReservation">
+                                        <input type="hidden" name="reservationId" value="@reservation.ReservationId">
+                                        <button type="submit" class="reject">Odrzuć</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Brak oczekujących rezerwacji.</p>
+            }
+        </section>
+
+        <script>
+            async function fetchPendingReservations() {
+                const response = await fetch('/Service/GetPendingReservations');
+                const data = await response.json();
+
+                if (data.success) {
+                    const tableBody = document.querySelector(".pending-reservations tbody");
+                    tableBody.innerHTML = ""; // Wyczyść poprzednie wiersze
+
+                    data.reservations.forEach(reservation => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                                        <td>${reservation.id}</td>
+                                        <td>${reservation.lastName}</td>
+                                        <td>${reservation.checkInDate}</td>
+                                        <td>${reservation.checkOutDate}</td>
+                                        <td>${reservation.status}</td>
+                                        <td>
+                                            <form method="post" action="/Service/ConfirmReservation">
+                                                <input type="hidden" name="reservationId" value="${reservation.id}">
+                                                <label>
+                                                    Pokój:
+                                                    <select name="roomId">
+                                                        <option value="">Wybierz</option>
+                                                        ${data.rooms.map(room => `<option value="${room.id}">${room.roomNumber}</option>`).join('')}
+                                                    </select>
+                                                </label>
+                                                <button type="submit">Potwierdź</button>
+                                            </form>
+                                            <form method="post" action="/Service/RejectReservation">
+                                                <input type="hidden" name="reservationId" value="${reservation.id}">
+                                                <button type="submit" class="reject">Odrzuć</button>
+                                            </form>
+                                        </td>
+                                    `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    alert(data.message || "Wystąpił błąd podczas pobierania rezerwacji.");
+                }
+            }
+
+            async function assignRoom(reservationId) {
+                const roomId = document.querySelector(`select[name=roomId][data-reservation-id="${reservationId}"]`).value;
+
+                if (!roomId) {
+                    alert("Proszę wybrać numer pokoju.");
+                    return;
+                }
+
+                const response = await fetch('/Service/AssignRoomToReservation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reservationId, roomId })
+                });
+
+                const data = await response.json();
+                alert(data.message);
+                fetchPendingReservations(); // Reload reservations
+            }
+
+            document.addEventListener("DOMContentLoaded", fetchPendingReservations);
+        </script>
+    </main>
+</body>
+</html>
