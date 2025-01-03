@@ -403,25 +403,56 @@ namespace Hotel.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmReservation(int reservationId, int roomId)
+        public async Task<IActionResult> ConfirmReservation(int reservationId, int roomId, [FromServices] EmailService emailService)
         {
-            // Znajdź rezerwację
-            var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.Id == reservationId);
+            // Pobierz rezerwację na podstawie ID
+            var reservation = await _context.Reservations.Include(r => r.User).FirstOrDefaultAsync(r => r.Id == reservationId);
             if (reservation == null)
             {
-                TempData["ErrorMessage"] = "Nie znaleziono rezerwacji.";
-                return RedirectToAction("ManagePendingReservations");
+                TempData["Error"] = "Nie znaleziono rezerwacji.";
+                return RedirectToAction(nameof(ManagePendingReservations));
             }
 
-            // Przypisz pokój i zmień status
+            // Przypisz pokój do rezerwacji
+            var room = await _context.Rooms.FirstOrDefaultAsync(r => r.Id == roomId);
+            if (room == null)
+            {
+                TempData["Error"] = "Nie znaleziono pokoju.";
+                return RedirectToAction(nameof(ManagePendingReservations));
+            }
+
             reservation.RoomId = roomId;
             reservation.Status = "potwierdzona";
 
-            await _context.SaveChangesAsync();
+            // Generowanie losowego kodu QR
             reservation.QRCode = GenerateRandomCode();
-            TempData["SuccessMessage"] = "Rezerwacja została potwierdzona.";
-            return RedirectToAction("ManagePendingReservations");
+
+            await _context.SaveChangesAsync();
+
+            // Wyślij e-mail z kodem QR
+            if (reservation.User != null && !string.IsNullOrEmpty(reservation.User.Email))
+            {
+                try
+                {
+                    Console.WriteLine($"Wysyłanie kodu QR na adres: {reservation.User.Email}");
+                    await emailService.SendEmailWithQrCode(reservation.User.Email, reservation.QRCode);
+                    TempData["Success"] = $"Rezerwacja {reservationId} potwierdzona i kod QR został wysłany na adres {reservation.User.Email}.";
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Błąd podczas wysyłania e-maila: {ex.Message}");
+                    TempData["Error"] = $"Rezerwacja {reservationId} została potwierdzona, ale nie udało się wysłać kodu QR.";
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Nie znaleziono adresu e-mail użytkownika.";
+            }
+
+            return RedirectToAction(nameof(ManagePendingReservations));
         }
+
+
 
 
         public class ReservationEmailDto
