@@ -370,6 +370,58 @@ namespace Hotel.Controllers
 
 
         }
+        [HttpGet]
+        public async Task<IActionResult> ManagePendingReservations()
+        {
+            // Pobierz niepotwierdzone rezerwacje
+            var pendingReservations = await _context.Reservations
+                .Where(r => r.Status == "niepotwierdzona")
+                .Include(r => r.User)
+                .ToListAsync();
+
+            // Pobierz listę dostępnych pokoi
+            var availableRooms = await _context.Rooms
+                .Where(r => !_context.Reservations.Any(res => res.RoomId == r.Id && res.Status == "potwierdzona"))
+                .ToListAsync();
+
+            ViewBag.PendingReservations = pendingReservations.Select(r => new
+            {
+                ReservationId = r.Id,
+                LastName = r.LastName,
+                CheckInDate = r.CheckInDate,
+                CheckOutDate = r.CheckOutDate,
+                Status = r.Status
+            }).ToList();
+
+            ViewBag.AvailableRooms = availableRooms.Select(r => new
+            {
+                Id = r.Id,
+                RoomNumber = r.RoomNumber
+            }).ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmReservation(int reservationId, int roomId)
+        {
+            // Znajdź rezerwację
+            var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.Id == reservationId);
+            if (reservation == null)
+            {
+                TempData["ErrorMessage"] = "Nie znaleziono rezerwacji.";
+                return RedirectToAction("ManagePendingReservations");
+            }
+
+            // Przypisz pokój i zmień status
+            reservation.RoomId = roomId;
+            reservation.Status = "potwierdzona";
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Rezerwacja została potwierdzona.";
+            return RedirectToAction("ManagePendingReservations");
+        }
 
 
         public class ReservationEmailDto

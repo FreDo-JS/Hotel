@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel SS-IGMA</title>
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/reze.css" asp-append-version="true">
 </head>
 <body class="mainContent">
     <header id="glowna">
@@ -33,31 +34,26 @@
     </header>
     <main class="background">
 
-        <div class="mainReservation">
-            <h1 class="h1">REZERWACJA</h1>
+        <div class="reservation-container">
+            <h1 class="reservation-title">Rezerwacja</h1>
 
-            <form action="" class="mainForm">
-                <!-- <div class="mainDate"> -->
-                <div>
-                    <label for="">DATA PRZYJAZDU</label>
-                    <input type="date" class="form-input">
-                </div><div>
-                    <label for="">DATA ODJAZDU</label>
-                    <input type="date" class="form-input">
+            <form id="reservationForm" class="reservation-form">
+                <div class="form-group">
+                    <label for="lastName">Nazwisko</label>
+                    <input type="text" id="lastName" class="form-input" placeholder="Podaj swoje nazwisko" required>
                 </div>
-                <!-- </div>
-                <div class="mainDate"> -->
-                <div>
-                    <label for="">ILOŚĆ OSÓB</label>
-                    <input type="number" class="form-input">
-                </div> <div>
-                    <label for="">ILOŚĆ POKOI</label>
-                    <input type="number" class="form-input">
+                <div class="form-group">
+                    <label for="checkInDate">Data przyjazdu</label>
+                    <input type="date" id="checkInDate" class="form-input" required>
                 </div>
-                <!-- </div> -->
-                <button class="book">REZERWUJ</button>
+                <div class="form-group">
+                    <label for="checkOutDate">Data wyjazdu</label>
+                    <input type="date" id="checkOutDate" class="form-input" required>
+                </div>
+                <button type="button" id="submitReservation" class="reservation-button">Rezerwuj</button>
             </form>
         </div>
+
 
         <div id="aboutUs">
             <div class="aboutLeft">
@@ -163,3 +159,43 @@
     </footer>
 </body>
 </html>
+<script>
+    document.getElementById("submitReservation").addEventListener("click", async function () {
+        const lastName = document.getElementById("lastName").value.trim();
+        const checkInDate = document.getElementById("checkInDate").value.trim();
+        const checkOutDate = document.getElementById("checkOutDate").value.trim();
+
+        if (!lastName || !checkInDate || !checkOutDate) {
+            alert("Wszystkie pola są wymagane.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/Home/CreatePublicReservation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    lastName: lastName,
+                    checkInDate: checkInDate,
+                    checkOutDate: checkOutDate,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert(data.message);
+            } else if (data.redirectUrl) {
+                window.location.href = data.redirectUrl; // Przekierowanie na login
+            } else {
+                alert(data.message || "Wystąpił błąd.");
+            }
+        } catch (error) {
+            console.error("Błąd podczas wysyłania danych:", error);
+            alert("Wystąpił błąd po stronie serwera.");
+        }
+    });
+
+</script>

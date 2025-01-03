@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zarządzanie niepotwierdzonymi rezerwacjami</title>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+</head>
+<body>
+    <header>
+        <h1>Zarządzanie niepotwierdzonymi rezerwacjami</h1>
+    </header>
+    <main>
+        @if (ViewBag.PendingReservations != null && ViewBag.PendingReservations.Count > 0)
+        {
+            <table class="pending-reservations">
+                <thead>
+                    <tr>
+                        <th>Numer Rezerwacji</th>
+                        <th>Nazwisko</th>
+                        <th>Data Przyjazdu</th>
+                        <th>Data Wyjazdu</th>
+                        <th>Status</th>
+                        <th>Opcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reservation in ViewBag.PendingReservations)
+                    {
+                        <tr>
+                            <td>@reservation.ReservationId</td>
+                            <td>@reservation.LastName</td>
+                            <td>@reservation.CheckInDate.ToString("yyyy-MM-dd")</td>
+                            <td>@reservation.CheckOutDate.ToString("yyyy-MM-dd")</td>
+                            <td>@reservation.Status</td>
+                            <td>
+                                <form method="post" action="/Service/ConfirmReservation">
+                                    <input type="hidden" name="reservationId" value="@reservation.ReservationId">
+                                    <label>
+                                        Pokój:
+                                        <select name="roomId">
+                                            <option value="">Wybierz</option>
+                                            @foreach (var room in ViewBag.AvailableRooms)
+                                            {
+                                                <option value="@room.Id">@room.RoomNumber</option>
+                                            }
+                                        </select>
+                                    </label>
+                                    <button type="submit">Potwierdź</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Brak oczekujących rezerwacji.</p>
+        }
+    </main>
+</body>
+</html>
