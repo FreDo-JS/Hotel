@@ -418,7 +418,7 @@ namespace Hotel.Controllers
             reservation.Status = "potwierdzona";
 
             await _context.SaveChangesAsync();
-
+            reservation.QRCode = GenerateRandomCode();
             TempData["SuccessMessage"] = "Rezerwacja została potwierdzona.";
             return RedirectToAction("ManagePendingReservations");
         }
