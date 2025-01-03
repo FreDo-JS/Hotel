@@ -37,7 +37,9 @@ namespace Hotel.Controllers
             ViewBag.UserName = user.Name;
             ViewBag.FirstName = user.Name?.Split(' ')[0] ?? "Nieznane";
             ViewBag.LastName = user.Name?.Split(' ').Length > 1 ? user.Name.Split(' ')[1] : "Nieznane";
+            ViewBag.Role = user.Role;
             ViewBag.Email = user.Email;
+
 
             // Pobierz historię rezerwacji użytkownika
             var reservations = await _context.Reservations
@@ -81,6 +83,8 @@ namespace Hotel.Controllers
             {
                 user.Role = newRole;
                 await _context.SaveChangesAsync();
+                HttpContext.Session.SetString("UserRole", newRole);
+
                 TempData["Success"] = $"Rola została zmieniona na {newRole}.";
             }
             else

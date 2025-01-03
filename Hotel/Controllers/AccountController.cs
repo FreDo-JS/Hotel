@@ -68,6 +68,11 @@ public class AccountController : Controller
             {
                 HttpContext.Session.SetString("UserEmail", email);
             }
+            if (!string.IsNullOrEmpty(existingUser.Role))
+            {
+                HttpContext.Session.SetString("UserRole", existingUser.Role);
+            }
+
 
             // Przechowaj wszystkie dane użytkownika w sesji w formacie JSON
             var userData = decodedToken.Claims;

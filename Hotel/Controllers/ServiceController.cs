@@ -16,6 +16,7 @@ using MimeKit;
 
 namespace Hotel.Controllers
 {
+    [RoleBasedAuthorize("administrator")]
     public class ServiceController : Controller
     {
         private readonly HotelDbContext _context;
@@ -30,6 +31,7 @@ namespace Hotel.Controllers
             // Pobierz listę pokoi z bazy danych
             var rooms = await _context.Rooms.Select(r => new { r.Id, r.RoomNumber }).ToListAsync();
             ViewBag.Rooms = rooms; // Przekazanie listy pokoi do widoku
+            ViewBag.UserRole = HttpContext.Session.GetString("UserRole");
 
             return View();
         }

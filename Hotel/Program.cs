@@ -52,6 +52,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<EmailService>();
 
+
 var app = builder.Build();
 
 // Konfiguracja middleware
@@ -68,6 +69,7 @@ app.MapControllerRoute(
     name: "qr",
     pattern: "Home/ScanQrCode",
     defaults: new { controller = "Home", action = "ScanQrCode" });
+
 
 
 app.UseSession();
