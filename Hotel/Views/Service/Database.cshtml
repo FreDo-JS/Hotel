@@ -1,0 +1,40 @@
+﻿
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel SS-IGMA</title>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+</head>
+<body class="adminPanel">
+    <main class="main-container">
+        <div class="box">
+            <!-- Lewy panel -->
+            <aside class="leftPanel">
+                <div class="Up">
+                    <img src="~/img/ss.png" alt="Logo SS-IGMA" class="logoSigmy">
+                </div>
+                <nav class="Down">
+                    <ul>
+                        <li><a href="@Url.Action("index", "Service")" class="adminList">Dashboard</a></li>
+                        <li><a href="@Url.Action("MainMenu", "Service")" class="adminList">Main Menu</a></li>
+                        <li><a href="@Url.Action("QrCode", "Service")" class="adminList">QR Code</a></li>
+                        <li><a href="@Url.Action("Booking", "Service")" class="adminList">Booking</a></li>
+                        <li><a href="@Url.Action("Database", "Service")" class="adminList">Baza danych</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Prawy panel -->
+            <section class="rightPanel">
+                <!-- Formularz dostępności -->
+             <h1>BAZA DANYCH</h1>
+            </section>
+        </div>
+    </main>
+</body>
+
+</html>
+
