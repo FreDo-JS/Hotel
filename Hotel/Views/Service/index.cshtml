@@ -1,4 +1,5 @@
 ﻿
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,11 +18,13 @@
                 </div>
                 <nav class="Down">
                     <ul>
-                        <li><a href="" class="adminList">Dashboard</a></li>
-                        <li><a href="" class="adminList">Main Menu</a></li>
-                        <li><a href="" class="adminList">QR Code</a></li>
-                        <li><a href="" class="adminList">Booking</a></li>
+
+                        <li><a href="@Url.Action("index", "Service")" class="adminList">Dashboard</a></li>
+                        <li><a href="@Url.Action("MainMenu", "Service")" class="adminList">Main Menu</a></li>
+                        <li><a href="@Url.Action("QrCode", "Service")" class="adminList">QR Code</a></li>
+                        <li><a href="@Url.Action("Booking", "Service")" class="adminList">Booking</a></li>
                         <li><a href="/Service/DatabaseOverview" class="adminList">Baza danych</a></li>
+
                     </ul>
                 </nav>
             </aside>
@@ -97,6 +100,8 @@
                         <button type="button" id="submitReservation" class="checkReserv">Zarezerwuj pokój</button>
                     </form>
                     <div id="reservationMessage" style="margin-top: 20px;"></div>
+                    <div class="roomList">
+                    </div>
                 </section>
 
 
@@ -104,10 +109,7 @@
 
                 <!-- Lista pokoi -->
                 <div class="roomsCheckRight">
-                    <div class="roomList">
-                        
-                        
-                    </div>
+                  
 
                     <!-- Sekcja kodów QR -->
                     <div class="QR">

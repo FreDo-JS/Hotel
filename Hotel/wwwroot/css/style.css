@@ -472,7 +472,7 @@ h2 {
 #footer {
     height: 500px;
     background-color: #0C122E;
-    margin-top: 238%;
+    
     display: flex;
     border-top: 4px solid #FFBE46;
 }
@@ -622,4 +622,196 @@ h2 {
     font-size: 14px;
     font-weight: bold;
     color: #333;
+}
+
+
+
+
+/* Media queries dla strony głównej */
+@media (max-width: 1200px) {
+    .mainReservation {
+        width: 90%;
+        left: auto;
+        top: 50px;
+        height: auto;
+    }
+
+    .form-input {
+        width: 100%;
+    }
+
+    .book {
+        width: 100%;
+    }
+
+    #aboutUs {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 200px;
+    }
+
+    .aboutRight, .aboutLeft {
+        width: 100%;
+        text-align: center;
+    }
+
+        .aboutRight > img {
+            width: 100%;
+        }
+
+    #rooms2 {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .coupleRoom, .familyRoom, .premiumRoom {
+        width: 90%;
+        margin-bottom: 20px;
+    }
+
+    #footer {
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+        margin-top: 100px;
+    }
+
+    .footerLogo, .footerContact, .footerLinks {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ulMain {
+        margin-top: 10px;
+    }
+
+    .mainReservation {
+        width: 95%;
+        left: auto;
+        top: 20px;
+    }
+
+    #aboutUs {
+        margin-top: 100px;
+    }
+
+    .aboutRight > img {
+        width: 90%;
+    }
+
+    #rooms2 {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .coupleRoom, .familyRoom, .premiumRoom {
+        width: 100%;
+    }
+
+    .grid-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .items1, .items2, .items3, .items4, .items5, .items6, .items7, .items8, .items9, .items10, .items11, .items12, .items13, .items14 {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    #footer {
+        flex-direction: column;
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 10px;
+    }
+
+    .mainReservation {
+        width: 100%;
+        height: auto;
+    }
+
+    #aboutUs {
+        padding: 10px;
+    }
+
+    .aboutLeft {
+        font-size: 18px;
+    }
+
+    #rooms2 {
+        padding: 10px;
+    }
+
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+
+    #footer {
+        flex-direction: column;
+        padding: 10px;
+    }
+}
+
+#footer
+{
+    position: relative;
+    top: 100%;
+}
+body
+{
+  height:100vh;
+}
+.rightPanel
+{
+    display:flex;
+    justify-content: space-evenly;
+
+}
+#checkAvailabilityForm, .roomList,.first,.QR
+{
+    width:33%;
+    display: flex;
+    flex-direction:column;
+}
+.roomList
+{
+    width: 300px;
+}
+.checkRooms
+{
+   display:flex;
+   justify-content:center;
+   flex-direction:column;
+}
+
+.google {
+    padding: 10px;
+    border: 2px solid white;
+    background: rgb(26,115,232);
+    background: linear-gradient(90deg, rgba(26,115,232,1) 0%, rgba(226,58,46,1) 29%, rgba(251,191,18,1) 58%, rgba(39,152,71,1) 80%);
+    font-size: 20px;
+    color: white;
+    border-radius: 15px;
+    position:relative;
+    left:50px;
+    bottom:150px;
+}
+.leftProfile {
+    background-color: #0C122E;
+}
+.RightProfile {
+    padding: 40px;
+    color: white;
+    background-color: #0C122E;
 }
