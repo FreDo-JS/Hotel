@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Przegląd Bazy Danych</title>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/table.css" asp-append-version="true">
+</head>
+<body>
+    <header>
+        <h1>Przegląd Bazy Danych</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Użytkownicy</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Imię</th>
+                        <th>Email</th>
+                        <th>Rola</th>
+                        <th>Utworzono</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in ViewBag.Users)
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.Name</td>
+                            <td>@user.Email</td>
+                            <td>@user.Role</td>
+                            <td>@user.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Pokoje</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Numer Pokoju</th>
+                        <th>Piętro</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var room in ViewBag.Rooms)
+                    {
+                        <tr>
+                            <td>@room.Id</td>
+                            <td>@room.RoomNumber</td>
+                            <td>@room.Floor</td>
+                            <td>@room.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Rezerwacje</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Użytkownik</th>
+                        <th>Pokój</th>
+                        <th>Data Przyjazdu</th>
+                        <th>Data Wyjazdu</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reservation in ViewBag.Reservations)
+                    {
+                        <tr>
+                            <td>@reservation.Id</td>
+                            <td>@reservation.User?.Name"</td>
+                            <td>@reservation.Room?.RoomNumber"</td>
+                            <td>@reservation.CheckInDate.ToString("yyyy-MM-dd")</td>
+                            <td>@reservation.CheckOutDate.ToString("yyyy-MM-dd")</td>
+                            <td>@reservation.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

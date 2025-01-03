@@ -452,6 +452,21 @@ namespace Hotel.Controllers
             return RedirectToAction(nameof(ManagePendingReservations));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DatabaseOverview()
+        {
+            // Pobierz dane z tabel
+            var users = await _context.Users.ToListAsync();
+            var rooms = await _context.Rooms.ToListAsync();
+            var reservations = await _context.Reservations.Include(r => r.User).Include(r => r.Room).ToListAsync();
+
+            // Przekaż dane do widoku
+            ViewBag.Users = users;
+            ViewBag.Rooms = rooms;
+            ViewBag.Reservations = reservations;
+
+            return View();
+        }
 
 
 
