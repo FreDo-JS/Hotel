@@ -3,6 +3,7 @@ using FirebaseAdmin;
 using Hotel.Data;
 using Hotel.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Hotel.Controllers
@@ -20,6 +21,38 @@ namespace Hotel.Controllers
             _logger = logger;
             _context = context;
             _firebaseAuth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDDOcI0a2y3vNwrwvzzcqHkN0p_JHUvKbI"));
+        }
+        [HttpPost]
+        public async Task<IActionResult> CheckQrCode([FromBody] QrCodeDto qrCodeDto)
+        {
+            if (string.IsNullOrEmpty(qrCodeDto.QrCode))
+            {
+                return Json(new { success = false, message = "Kod QR jest wymagany." });
+            }
+
+            // ZnajdŸ rezerwacjê na podstawie kodu QR
+            var reservation = await _context.Reservations
+                .Include(r => r.Room)
+                .FirstOrDefaultAsync(r => r.QRCode == qrCodeDto.QrCode);
+
+            if (reservation == null)
+            {
+                return Json(new { success = false, message = "Nie znaleziono rezerwacji dla tego kodu QR." });
+            }
+
+            return Json(new { success = true, roomNumber = reservation.Room.RoomNumber });
+        }
+
+        public class QrCodeDto
+        {
+            public string QrCode { get; set; }
+        }
+
+
+        [HttpGet]
+        public IActionResult ScanQrCode()
+        {
+            return View();
         }
 
 

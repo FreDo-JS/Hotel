@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skanuj Kod QR</title>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+</head>
+<body>
+    <header>
+        <h1>Skanuj Kod QR</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Wgraj lub zeskanuj kod QR</h2>
+            <form id="qrCodeForm">
+                <label for="qrInput">Wprowadź dane kodu QR:</label>
+                <input type="text" id="qrInput" placeholder="Wprowadź kod QR ręcznie" required>
+                <button type="button" onclick="submitQrCode()">Otwórz Pokój</button>
+            </form>
+            <div id="resultMessage" style="margin-top: 20px;"></div>
+        </section>
+    </main>
+    <script>
+        async function submitQrCode() {
+            const qrCode = document.getElementById("qrInput").value.trim();
+            const resultMessage = document.getElementById("resultMessage");
+
+            if (!qrCode) {
+                resultMessage.textContent = "Proszę wprowadzić kod QR.";
+                resultMessage.style.color = "red";
+                return;
+            }
+
+            try {
+                const response = await fetch('/Home/CheckQrCode', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ qrCode })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultMessage.textContent = `Pokój ${data.roomNumber} został otwarty.`;
+                    resultMessage.style.color = "green";
+                } else {
+                    resultMessage.textContent = data.message || "Nie udało się otworzyć pokoju.";
+                    resultMessage.style.color = "red";
+                }
+            } catch (error) {
+                console.error("Błąd podczas weryfikacji kodu QR:", error);
+                resultMessage.textContent = "Wystąpił błąd po stronie serwera.";
+                resultMessage.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>

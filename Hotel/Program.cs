@@ -64,6 +64,11 @@ else
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+app.MapControllerRoute(
+    name: "qr",
+    pattern: "Home/ScanQrCode",
+    defaults: new { controller = "Home", action = "ScanQrCode" });
+
 
 app.UseSession();
 app.UseHttpsRedirection();
