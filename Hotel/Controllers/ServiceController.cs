@@ -33,7 +33,31 @@ namespace Hotel.Controllers
 
             return View();
         }
-        
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+
+        public IActionResult MainMenu()
+        {
+            return View();
+        }
+
+        public IActionResult QrCode()
+        {
+            return View();
+        }
+
+        public IActionResult Booking()
+        {
+            return View();
+        }
+
+        public IActionResult Database()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> DodajPokoj()
         {
