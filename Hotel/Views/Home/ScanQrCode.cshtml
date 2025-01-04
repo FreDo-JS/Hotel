@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otwieranie Pokoi za pomocą QR Kodów</title>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+    <script src="~/js/jsQR.js"></script> <!-- Biblioteka jsQR -->
+</head>
+<body>
+    <header>
+        <h1>Otwieranie Pokoi za pomocą QR Kodów</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Wgraj obraz QR kodu</h2>
+            <form id="uploadForm">
+                <label for="qrFile">Wgraj obraz:</label>
+                <input type="file" id="qrFile" accept="image/*">
+                <button type="button" onclick="processImage()">Przetwórz obraz</button>
+            </form>
+            <div id="resultMessage" style="margin-top: 20px;"></div>
+        </section>
+    </main>
+
+    <script>
+        function processImage() {
+            const fileInput = document.getElementById("qrFile");
+            const resultMessage = document.getElementById("resultMessage");
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                resultMessage.textContent = "Proszę wybrać plik z QR kodem.";
+                resultMessage.style.color = "red";
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function () {
+                const image = new Image();
+                image.src = reader.result;
+
+                image.onload = function () {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    const context = canvas.getContext("2d");
+                    context.drawImage(image, 0, 0);
+
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+
+                    if (qrCode) {
+                        resultMessage.textContent = `Odczytano QR kod: ${qrCode.data}`;
+                        resultMessage.style.color = "green";
+                        verifyQrCode(qrCode.data); // Weryfikacja QR kodu
+                    } else {
+                        resultMessage.textContent = "Nie udało się odczytać QR kodu.";
+                        resultMessage.style.color = "red";
+                    }
+                };
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        async function verifyQrCode(qrCode) {
+            try {
+                const response = await fetch('/Home/CheckQrCode', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ qrCode })
+                });
+
+                const data = await response.json();
+                const resultMessage = document.getElementById("resultMessage");
+
+                if (data.success) {
+                    resultMessage.textContent = `Pokój ${data.roomNumber} został otwarty.`;
+                    resultMessage.style.color = "green";
+                } else {
+                    resultMessage.textContent = data.message || "Nie udało się otworzyć pokoju.";
+                    resultMessage.style.color = "red";
+                }
+            } catch (error) {
+                console.error("Błąd podczas weryfikacji kodu QR:", error);
+                resultMessage.textContent = "Wystąpił błąd po stronie serwera.";
+                resultMessage.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>

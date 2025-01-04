@@ -4,6 +4,7 @@
 // Write your JavaScript code.
 
 // Sprawdzanie wypelnienia pól w rejestracji
+
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("form");
     const inputs = document.querySelectorAll(".styleInput");
@@ -38,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 //Kod do zmiany karty  w adminPanelu
-document.addEventListener("DOMContentLoaded", function () {
+/* document.addEventListener("DOMContentLoaded", function () {
     const links = document.querySelectorAll(".adminList");
     const sections = document.querySelectorAll(".content-section");
 
@@ -75,4 +76,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Wyświetlenie sekcji "Dashboard" jako domyślnej po załadowaniu strony
     showSection("dashboard");
-});
+}); */

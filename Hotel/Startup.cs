@@ -73,7 +73,7 @@ namespace Hotel.Models
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseSession(); // Użyj sesji
+            app.UseSession(); 
 
             app.UseEndpoints(endpoints =>
             {

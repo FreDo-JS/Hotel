@@ -16,6 +16,8 @@ using MimeKit;
 
 namespace Hotel.Controllers
 {
+    
+    [RoleBasedAuthorize("pracownik")]
     public class ServiceController : Controller
     {
         private readonly HotelDbContext _context;
@@ -27,9 +29,10 @@ namespace Hotel.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            // Pobierz listę pokoi z bazy danych
+            
             var rooms = await _context.Rooms.Select(r => new { r.Id, r.RoomNumber }).ToListAsync();
             ViewBag.Rooms = rooms; // Przekazanie listy pokoi do widoku
+            ViewBag.UserRole = HttpContext.Session.GetString("UserRole");
 
             return View();
         }
@@ -67,7 +70,7 @@ namespace Hotel.Controllers
         
 
 
-        // Dodanie nowego pokoju
+        
         [HttpPost]
         public async Task<IActionResult> DodajPokoj(Room room)
         {
@@ -97,7 +100,7 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Nie znaleziono pokoju o podanym numerze." });
             }
 
-            // Sprawdź dostępność pokoju
+            
             var isAvailable = !await _context.Reservations.AnyAsync(r =>
                 r.RoomId == room.Id &&
                 ((reservationDto.CheckInDate >= r.CheckInDate && reservationDto.CheckInDate < r.CheckOutDate) ||
@@ -108,15 +111,15 @@ namespace Hotel.Controllers
             {
                 return Json(new { success = false, message = "Pokój jest zajęty w wybranym terminie." });
             }
-            // Wygeneruj losowy kod QR
+            
             var qrCode = GenerateRandomCode();
 
-            // Utwórz nową rezerwację
+            
             var reservation = new Reservation
             {
                 UserId = reservationDto.UserId,
                 RoomId = room.Id,
-                LastName = reservationDto.LastName, // Dodanie nazwiska do zapisu
+                LastName = reservationDto.LastName, 
                 CheckInDate = reservationDto.CheckInDate,
                 CheckOutDate = reservationDto.CheckOutDate,
                 Status = "potwierdzona",
@@ -149,10 +152,10 @@ namespace Hotel.Controllers
 
             var rooms = await roomsQuery.ToListAsync();
 
-            // Pobierz zajęte pokoje w wybranym przedziale dat
+            
             var reservations = await _context.Reservations
                 .Where(r => r.CheckInDate < request.CheckOutDate && r.CheckOutDate > request.CheckInDate)
-                .Include(r => r.User) // Dołącz dane użytkownika
+                .Include(r => r.User) 
                 .ToListAsync();
 
             var result = rooms.Select(room => new
@@ -192,11 +195,11 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Nie znaleziono rezerwacji." });
             }
 
-            // Generowanie nowego losowego kodu
+            
             reservation.QRCode = GenerateRandomCode();
             await _context.SaveChangesAsync();
 
-            // Informacje do zapisania w kodzie QR
+            
             var qrData = reservation.QRCode;
 
             using (var qrGenerator = new QRCodeGenerator())
@@ -235,7 +238,7 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Nie znaleziono kodu QR dla tej rezerwacji." });
             }
 
-            // Generowanie QR kodu na podstawie istniejącego ciągu
+           
             var qrData = reservation.QRCode;
 
             using (var qrGenerator = new QRCodeGenerator())
@@ -268,7 +271,7 @@ namespace Hotel.Controllers
             }
 
             var reservation = await _context.Reservations
-                .Include(r => r.User) // Pobranie użytkownika
+                .Include(r => r.User) 
                 .FirstOrDefaultAsync(r => r.Id == dto.ReservationId);
 
             if (reservation == null)
@@ -397,13 +400,13 @@ namespace Hotel.Controllers
         [HttpGet]
         public async Task<IActionResult> ManagePendingReservations()
         {
-            // Pobierz niepotwierdzone rezerwacje
+            
             var pendingReservations = await _context.Reservations
                 .Where(r => r.Status == "niepotwierdzona")
                 .Include(r => r.User)
                 .ToListAsync();
 
-            // Pobierz listę dostępnych pokoi
+            
             var availableRooms = await _context.Rooms
                 .Where(r => !_context.Reservations.Any(res => res.RoomId == r.Id && res.Status == "potwierdzona"))
                 .ToListAsync();
@@ -429,7 +432,7 @@ namespace Hotel.Controllers
         [HttpPost]
         public async Task<IActionResult> ConfirmReservation(int reservationId, int roomId, [FromServices] EmailService emailService)
         {
-            // Pobierz rezerwację na podstawie ID
+            
             var reservation = await _context.Reservations.Include(r => r.User).FirstOrDefaultAsync(r => r.Id == reservationId);
             if (reservation == null)
             {
@@ -437,7 +440,7 @@ namespace Hotel.Controllers
                 return RedirectToAction(nameof(ManagePendingReservations));
             }
 
-            // Przypisz pokój do rezerwacji
+            
             var room = await _context.Rooms.FirstOrDefaultAsync(r => r.Id == roomId);
             if (room == null)
             {
@@ -448,12 +451,12 @@ namespace Hotel.Controllers
             reservation.RoomId = roomId;
             reservation.Status = "potwierdzona";
 
-            // Generowanie losowego kodu QR
+            
             reservation.QRCode = GenerateRandomCode();
 
             await _context.SaveChangesAsync();
 
-            // Wyślij e-mail z kodem QR
+            
             if (reservation.User != null && !string.IsNullOrEmpty(reservation.User.Email))
             {
                 try
@@ -475,7 +478,7 @@ namespace Hotel.Controllers
 
             return RedirectToAction(nameof(ManagePendingReservations));
         }
-
+        [RoleBasedAuthorize("administrator")]
         [HttpGet]
         public async Task<IActionResult> DatabaseOverview()
         {
@@ -585,7 +588,7 @@ namespace Hotel.Controllers
     public class ReservationDto
     {
         public int UserId { get; set; }
-        public string? LastName { get; set; } // Dodane nazwisko
+        public string? LastName { get; set; } 
         public int RoomNumber { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
