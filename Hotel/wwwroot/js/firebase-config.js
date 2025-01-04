@@ -49,7 +49,7 @@ window.googleLogin = function () {
                     .then(data => {
                         if (data.success) {
                             // Przekierowanie na stronę główną po pomyślnym utworzeniu sesji
-                            window.location.href = "/";
+                            window.location.href = "/Home/Index";
 
                         } else {
                             console.error('Błąd logowania na serwerze:', data.message);

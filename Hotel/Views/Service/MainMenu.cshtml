@@ -21,7 +21,11 @@
                         <li><a href="@Url.Action("MainMenu", "Service")" class="adminList">Main Menu</a></li>
                         <li><a href="@Url.Action("QrCode", "Service")" class="adminList">QR Code</a></li>
                         <li><a href="@Url.Action("Booking", "Service")" class="adminList">Booking</a></li>
-                        <li><a href="@Url.Action("Database", "Service")" class="adminList">Baza danych</a></li>
+                        @if (ViewBag.UserRole == "administrator")
+                        {
+                            <li><a href="/Service/DatabaseOverview" class="adminList">Baza danych</a></li>
+                        }
+                        <li><a href="@Url.Action("Index", "Home")" class="adminList">Strona Główna</a></li>
                     </ul>
                 </nav>
             </aside>

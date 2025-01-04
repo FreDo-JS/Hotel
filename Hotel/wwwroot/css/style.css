@@ -22,6 +22,7 @@ html {
 .mainContent {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .logIn {
@@ -179,9 +180,9 @@ li {
     color: #0C122E;
 }
 
-.adminList:hover {
+    .adminList:hover {
         color: #FFBE46;
-}
+    }
 
 .adminPanel {
     justify-content: flex-start;
@@ -330,6 +331,7 @@ header {
     margin-top: 20px;
 }
 
+
 .background {
     background-image: url("../img/pexels-pixabay-258154.jpg");
     background-color: #cccccc;
@@ -469,12 +471,14 @@ h2 {
         font-size: 20px;
     }
 
-#footer {
+footer {
     height: 500px;
     background-color: #0C122E;
-    
+    position: absolute;
+    bottom: 0;
     display: flex;
     border-top: 4px solid #FFBE46;
+    margin-top: 100%;
 }
 
 .footerLogo, .footerContact, .footerLinks {
@@ -494,6 +498,7 @@ h2 {
 }
 
 .grid-container {
+    margin-top: 210px;
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
     grid-template-rows: repeat(9,300px);
@@ -615,6 +620,7 @@ h2 {
     margin: 30px;
     border-radius: 15px;
 }
+
 .user-info {
     position: absolute;
     top: 10px;
@@ -763,36 +769,34 @@ h2 {
     }
 }
 
-#footer
-{
+#footer {
     position: relative;
     top: 100%;
 }
-body
-{
-  height:100vh;
-}
-.rightPanel
-{
-    display:flex;
-    justify-content: space-evenly;
 
+body {
+    height: 100vh;
 }
-#checkAvailabilityForm, .roomList,.first,.QR
-{
-    width:33%;
+
+.rightPanel {
     display: flex;
-    flex-direction:column;
+    justify-content: space-evenly;
 }
-.roomList
-{
+
+#checkAvailabilityForm, .roomList, .first, .QR {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+}
+
+.roomList {
     width: 300px;
 }
-.checkRooms
-{
-   display:flex;
-   justify-content:center;
-   flex-direction:column;
+
+.checkRooms {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .google {
@@ -815,10 +819,12 @@ body
     bottom: 160px;
     left: 40px;
 }
-.google:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    background-color: #f7f7f7;
-}
+
+    .google:hover {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        background-color: #f7f7f7;
+    }
+
 .google-icon {
     width: 32px;
     height: 32px;
@@ -832,28 +838,138 @@ body
 .leftProfile {
     background-color: #0C122E;
 }
+
 .RightProfile {
     padding: 40px;
     color: white;
     background-color: #0C122E;
 }
 
-.form-group > input
-{
-    color: black;
-    
+.form-group > input {
+    color: white;
+    border-radius: 0;
 }
-.form-group > label
-{
+
+.form-group > label {
     text-align: center
 }
-.reservation-container
-{
+
+.reservation-container {
     position: relative;
     left: 350px;
-    top:150px;
+    top: 150px;
 }
-.reservation-button
-{
+
+.reservation-button {
     background-color: yellow;
+}
+
+.DatabaseMain {
+    display: flex;
+    width: 1500px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.LOGGED {
+    color: #FFBE46;
+    padding: 10px;
+    text-decoration: underline;
+    text-transform: uppercase;
+}
+
+.flex, .leftPanelService {
+    display: flex;
+    flex-direction: column;
+}
+
+    .flex > input {
+        width: 80%;
+        margin: 10px;
+    }
+
+.inputFlex {
+    display: flex;
+}
+
+section > rightPanel {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.resultService {
+    width: 350px;
+    height: 400px;
+    overflow: auto;
+    border: 1px solid #0C122E;
+    padding: 10px;
+    border-radius: 10px;
+    /* margin-left: 20% ; */
+}
+
+.inputChange > input {
+    width: 150px;
+    padding: 10px;
+}
+
+
+.leftPanelService h2 {
+    text-align: left;
+}
+
+.main-container {
+    display: flex;
+}
+
+.roomsCheckRight {
+    margin-left: 100px;
+}
+
+.seriveResult {
+    font-size: 16px;
+    color: #fbbc04;
+    padding: 5px;
+}
+
+.formAddRoom {
+    background-color: #0C122E;
+    color: white;
+    font-size: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .formAddRoom > input {
+        display: flex;
+        justify-content: center;
+    }
+
+    .formAddRoom > button {
+        width: 300px;
+        height: 70px;
+        font-size: 28px;
+        border-radius: 8px;
+        border: none;
+        color: #0C122E;
+        background-color: #fbbc04;
+        transition: .3s;
+    }
+
+        .formAddRoom > button:hover {
+            color: #fbbc04;
+            background-color: #0C122E;
+            transition: .3s;
+            border: .1px solid #fbbc04
+        }
+
+body.addRoomBody {
+    background-color: #D3D3D3;
+}
+
+
+.sectionAddRoom {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 15px;
 }

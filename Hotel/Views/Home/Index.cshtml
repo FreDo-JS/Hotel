@@ -15,8 +15,8 @@
     <header id="glowna">
         <div class="listLeft">
             <ul class="ulMain">
-                <li class="mainList"><a href="#aboutUs">O NAS</a></li>
-                <li class="mainList"><a href="#rooms2">POKOJE</a></li>
+                <li class="mainList"><a href="@Url.Action("index", "UserPanel")">PANEL KLIENTA</a></li>
+                <li class="mainList"><a href="@Url.Action("dodajpokoj", "Service")">POKOJE</a></li>
                 <li class="mainList"><a href="#gallery">GALERIA</a></li>
             </ul>
         </div>
@@ -26,9 +26,9 @@
         <img src="~/img/ss.png" alt="" class="logoSigmy">
         <div class="listRight">
             <ul class="ulMain">
-                <li class="mainList"><a href="#glowna">STRONA GŁÓWNA</a></li>
-                <li class="mainList"><a href="rezerwacja">REZERWACJA</a></li>
-                <li class="mainList"><a href="#footer">KONTAKT</a></li>
+                <li class="mainList"><a href=" @Url.Action("Index", "Service")">PANEL ADMINA</a></li>
+                <li class="mainList"><a href="rezerwacja">QR KOD</a></li>
+                <li class="mainList">ZALOGOWANO JAKO <a href="@Url.Action("Index", "Login")"><span class="LOGGED">Gość</span></a></li>
                 @if (ViewBag.IsLoggedIn)
                 {
                     <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
@@ -65,7 +65,7 @@
         </div>
 
 
-        <div id="aboutUs">
+        <!--<div id="aboutUs">
             <div class="aboutLeft">
                 <h2>O nas</h2>
                 <p class="aboutUsText">Hotel Sigma to miejsce, gdzie nowoczesny design łączy się z tradycyjną gościnnością, oferując niezapomniane wrażenia w sercu malowniczego regionu. Nasza historia sięga 2010 roku, kiedy z pasji do tworzenia wyjątkowych doświadczeń powstał ten rodzinny obiekt. Położony w spokojnej okolicy, zaledwie kilka minut od centrum, hotel zapewnia komfort i dostęp do lokalnych atrakcji. Nasz zespół, składający się z doświadczonych specjalistów, dba o każdy szczegół, aby każdy gość czuł się wyjątkowo. Zapraszamy do relaksu w naszym spa, delektowania się regionalną kuchnią w restauracji i odkrywania niezrównanego piękna okolicy.</p>
@@ -94,7 +94,7 @@
                 <p>Pokój Premium to synonim luksusu i elegancji, oferujący wyższy standard wyposażenia oraz wyjątkowy design. Dedykowany dla osób ceniących komfort na najwyższym poziomie, z dodatkowymi udogodnieniami, takimi jak ekspres do kawy czy widok na malowniczą okolicę.</p>
             </div>
         </div>
-
+         -->
         <div class="grid-container" id="gallery">
             <div class="items1">
             </div>

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel SS-IGMA</title>
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/css/style.css" asp-append-version="true" />
 </head>
 <body class="adminPanel">
     <main class="main-container">
@@ -27,6 +27,7 @@
                         {
                             <li><a href="/Service/DatabaseOverview" class="adminList">Baza danych</a></li>
                         }
+                        <li><a href="@Url.Action("Index", "Home")" class="adminList">Strona Główna</a></li>
 
                     </ul>
                 </nav>
@@ -34,108 +35,128 @@
 
             <!-- Prawy panel -->
             <section class="rightPanel">
-                <!-- Formularz dostępności -->
-                <form id="checkAvailabilityForm" class="checkRooms">
-                    <div class="flex">
-                        <div class="inputChange">
-                            <label for="dataPrzyjazdu">Data Przyjazdu</label>
-                            <input type="date" id="dataPrzyjazdu" class="dataPrzyjazdu" required>
-                        </div>
-                        <div class="inputChange">
-                            <label for="dataWyjazdu">Data Wyjazdu</label>
-                            <input type="date" id="dataWyjazdu" class="dataWyjazdu" required>
-                        </div>
-                        <div class="inputChange">
-                            <label for="pietro">Piętro</label>
-                            <select id="pietro" class="pietro">
-                                <option value="">Wszystkie</option>
-                                <option value="1">1 Piętro</option>
-                                <option value="2">2 Piętro</option>
-                                <option value="3">3 Piętro</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="button" id="checkAvailabilityButton" class="Dostepnosc">Sprawdź dostępność</button>
-                    <div class="accessible">
-                        <p id="availabilityResult">W przedziale DATA jest dostępnych : XX pokoi.</p>
-                    </div>
-                    <div id="roomDetails" style="margin-top: 20px;"></div>
-                </form>
 
-
-
-                <!-- Sekcja rezerwacji -->
-                <section class="reservation">
-                    <h2>Rezerwacja</h2>
-                    <form id="reservationForm" class="checkReservation">
-                        <div class="first">
-                            <div class="second">
-                                <label for="inputUserId">ID Użytkownika</label>
-                                <input type="number" id="inputUserId" name="UserId" class="inputID" required>
+                <div class="leftPanelService">
+                    <h2>Sprawdzenie Pokoi</h2>
+                    <!-- Formularz dostępności -->
+                    <form id="checkAvailabilityForm" class="checkRooms">
+                        <div class="flex">
+                            <div class="inputFlex">
+                                <div class="inputChange">
+                                    <label for="dataPrzyjazdu">Data Przyjazdu</label>
+                                    <input type="date" id="dataPrzyjazdu" class="dataPrzyjazdu" required>
+                                </div>
+                                <div class="inputChange">
+                                    <label for="dataWyjazdu">Data Wyjazdu</label>
+                                    <input type="date" id="dataWyjazdu" class="dataWyjazdu" required>
+                                </div>
                             </div>
-                            <div class="second">
-                                <label for="inputLastName">Nazwisko</label>
-                                <input type="text" id="inputLastName" name="LastName" class="inputLastName" required>
-                            </div>
-                        </div>
-                        <div class="first">
-                            <div class="second">
-                                <label for="selectRoomNumber">Numer Pokoju</label>
-                                <select id="selectRoomNumber" name="RoomNumber" class="inputRoom" required>
-                                    <option value="">Wybierz pokój</option>
-                                    @foreach (var room in ViewBag.Rooms)
-                                    {
-                                        <option value="@room.RoomNumber">@room.RoomNumber</option>
-                                    }
+                            <div class="inputChange">
+                                <br />
+                                <label for="pietro">Piętro</label>
+                                <select id="pietro" class="pietro">
+                                    <option value="">Wszystkie</option>
+                                    <option value="1">1 Piętro</option>
+                                    <option value="2">2 Piętro</option>
+                                    <option value="3">3 Piętro</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="first">
-                            <div class="second">
-                                <label for="inputDataPrzyjazdu">Data Przyjazdu</label>
-                                <input type="date" id="inputDataPrzyjazdu" name="CheckInDate" class="inputDataPrzyjazdu" required>
-                            </div>
-                            <div class="second">
-                                <label for="inputDataWyjazdu">Data Wyjazdu</label>
-                                <input type="date" id="inputDataWyjazdu" name="CheckOutDate" class="inputDataWyjazdu" required>
-                            </div>
+                        <button type="button" id="checkAvailabilityButton" class="Dostepnosc">Sprawdź dostępność</button>
+                        <div class="accessible">
+                            <p id="availabilityResult">W przedziale DATA jest dostępnych : XX pokoi.</p>
                         </div>
-                        <button type="button" id="submitReservation" class="checkReserv">Zarezerwuj pokój</button>
+
+
                     </form>
-                    <div id="reservationMessage" style="margin-top: 20px;"></div>
-                    <div class="roomList">
-                    </div>
-                </section>
 
 
 
+                    <!-- Sekcja rezerwacji -->
+                    <section class="reservation">
+                        <h2>Rezerwacja</h2>
+                        <form id="reservationForm" class="checkReservation">
+                            <div class="first">
+                                <div class="inputFlex">
+                                    <div class="second">
 
-                <!-- Lista pokoi -->
-                <div class="roomsCheckRight">
-                  
-
-                    <!-- Sekcja kodów QR -->
-                    <div class="QR">
-                        <div class="qRLeftSide">
-                            <label for="qrReservationId">ID Rezerwacji</label>
-                            <input type="number" id="qrReservationId" class="qrInput" placeholder="Wprowadź ID rezerwacji">
-                            <div class="codeQR">
-                                <img id="qrCodeImage" src="" alt="Kod QR" style="max-width: 250px; margin-top: 0px;">
+                                        <label for="inputUserId">ID Użytkownika</label>
+                                        <input type="number" id="inputUserId" name="UserId" class="inputID" required>
+                                    </div>
+                                    <div class="second">
+                                        <label for="inputLastName">Nazwisko</label>
+                                        <input type="text" id="inputLastName" name="LastName" class="inputLastName" required>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="QrRightSide">
-                            <button class="load" onclick="loadExistingQRCode()">WCZYTAJ KOD QR</button>
-                            <button class="generateNew" onclick="generateNewQRCode()">WYGENERUJ NOWY KOD</button>
-                            <button class="openIn" onclick="openQRCodeInNewTab()">OTWÓRZ W KARCIE</button>
-                            <button class="downloadQR" onclick="downloadQRCode()">POBIERZ KOD QR</button>
-                            <button class="sendQR" onclick="sendQrCode()">WYŚLIJ KOD QR</button>
-                            <label for="qrEmail">Adres mailowy</label>
-                            <input type="email" id="qrEmail" class="qrInput" placeholder="Wprowadź adres e-mail">
+                            <div class="first">
+                                <div class="second">
+                                    <label for="selectRoomNumber">Numer Pokoju</label>
+                                    <select id="selectRoomNumber" name="RoomNumber" class="inputRoom" required>
+                                        <option value="">Wybierz pokój</option>
+                                        @foreach (var room in ViewBag.Rooms)
+                                        {
+                                            <option value="@room.RoomNumber">@room.RoomNumber</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="first">
+                                <div class="inputFlex">
+                                    <div class="second">
+                                        <label for="inputDataPrzyjazdu">Data Przyjazdu</label>
+                                        <input type="date" id="inputDataPrzyjazdu" name="CheckInDate" class="inputDataPrzyjazdu" required>
+                                    </div>
+                                    <div class="second">
+                                        <label for="inputDataWyjazdu">Data Wyjazdu</label>
+                                        <input type="date" id="inputDataWyjazdu" name="CheckOutDate" class="inputDataWyjazdu" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" id="submitReservation" class="checkReserv">Zarezerwuj pokój</button>
+
+                        </form>
+                </div>
+
+            </section>
+
+            <section class="middle">
+
+                <p class="seriveResult">Pokoje</p>
+                <div id="roomDetails" class="resultService" style="margin-top: 20px;"></div>
+                <p class="seriveResult">Rezerwacje</p>
+                <div id="reservationMessage" class="resultService" style="margin-top: 20px;"></div>
+            </section>
+
+
+
+
+            <!-- Lista pokoi -->
+            <div class="roomsCheckRight">
+
+                <h2>Sprawdzanie QR CODE</h2>
+                <!-- Sekcja kodów QR -->
+                <div class="QR">
+                    <div class="qRLeftSide">
+                        <label for="qrReservationId">ID Rezerwacji</label>
+                        <input type="number" id="qrReservationId" class="qrInput" placeholder="Wprowadź ID rezerwacji">
+                        <div class="codeQR">
+                            <img id="qrCodeImage" src="" alt="Kod QR" style="max-width: 250px; margin-top: 0px;">
                         </div>
                     </div>
-
-
+                    <div class="QrRightSide">
+                        <button class="load" onclick="loadExistingQRCode()">WCZYTAJ KOD QR</button>
+                        <button class="generateNew" onclick="generateNewQRCode()">WYGENERUJ NOWY KOD</button>
+                        <button class="openIn" onclick="openQRCodeInNewTab()">OTWÓRZ W KARCIE</button>
+                        <button class="downloadQR" onclick="downloadQRCode()">POBIERZ KOD QR</button>
+                        <button class="sendQR" onclick="sendQrCode()">WYŚLIJ KOD QR</button>
+                        <label for="qrEmail">Adres mailowy</label>
+                        <input type="email" id="qrEmail" class="qrInput" placeholder="Wprowadź adres e-mail">
+                    </div>
                 </div>
+
+
+            </div>
             </section>
         </div>
     </main>
