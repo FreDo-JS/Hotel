@@ -20,14 +20,15 @@
                     <ul>
 
                         <li><a href="@Url.Action("index", "Service")" class="adminList">Dashboard</a></li>
-                        <li><a href="@Url.Action("MainMenu", "Service")" class="adminList">Main Menu</a></li>
-                        <li><a href="@Url.Action("QrCode", "Service")" class="adminList">QR Code</a></li>
-                        <li><a href="@Url.Action("Booking", "Service")" class="adminList">Booking</a></li>
+                     
                         @if (ViewBag.UserRole == "administrator")
                         {
                             <li><a href="/Service/DatabaseOverview" class="adminList">Baza danych</a></li>
                         }
                         <li><a href="@Url.Action("Index", "Home")" class="adminList">Strona Główna</a></li>
+                        <li><a href="@Url.Action("dodajpokoj", "Service")" class="adminList">Dodaj Pokój</a></li>
+                        <li><a href="@Url.Action("ManagePendingReservations", "Service")" class="adminList">Zarządzaj rezerwacjami</a></li>
+                     
 
                     </ul>
                 </nav>
@@ -159,6 +160,7 @@
             </div>
             </section>
         </div>
+
     </main>
 </body>
 

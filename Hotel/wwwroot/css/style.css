@@ -799,41 +799,7 @@ body {
     flex-direction: column;
 }
 
-.google {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px; /* Odstęp między ikoną a tekstem */
-    width: 240px;
-    height: 40px;
-    background-color: #fff;
-    border: 1px solid #dadce0;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    color: #757575;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.2s ease, background-color 0.2s ease;
-    position: relative;
-    bottom: 160px;
-    left: 40px;
-}
 
-    .google:hover {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        background-color: #f7f7f7;
-    }
-
-.google-icon {
-    width: 32px;
-    height: 32px;
-    display: inline-block;
-    background: conic-gradient( #4285f4 0 25%, #34a853 25% 50%, #fbbc04 50% 75%, #ea4335 75% 100% );
-    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12l-5-5h10l-5 5zm0 0l-5 5h10l-5-5z"/></svg>') no-repeat center;
-    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12l-5-5h10l-5 5zm0 0l-5 5h10l-5-5z"/></svg>') no-repeat center;
-    background-size: contain;
-}
 
 .leftProfile {
     background-color: #0C122E;
@@ -945,7 +911,7 @@ section > rightPanel {
         justify-content: center;
     }
 
-    .formAddRoom > button {
+    .formAddRoom > button, .btn-qr {
         width: 300px;
         height: 70px;
         font-size: 28px;
@@ -956,7 +922,7 @@ section > rightPanel {
         transition: .3s;
     }
 
-        .formAddRoom > button:hover {
+        .formAddRoom > button:hover, .btn-qr:hover{
             color: #fbbc04;
             background-color: #0C122E;
             transition: .3s;
@@ -972,4 +938,64 @@ body.addRoomBody {
     display: flex;
     flex-wrap: wrap;
     padding: 15px;
+}
+
+
+.button-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #FFBE46;
+    color: #0C122E;
+    width:150px;
+    height:60px;
+    background-color: #FFBE46;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+    .button-link:hover {
+        background-color: #E6A536;
+    }
+
+.logInDown
+{
+    height:300px;
+
+}
+.google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Odstęp między ikoną a tekstem */
+    width: 240px;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #757575;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+   position: relative;
+   top:30%;
+}
+
+    .google:hover {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        background-color: #f7f7f7;
+    }
+
+.google-icon {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    background: conic-gradient( #4285f4 0 25%, #34a853 25% 50%, #fbbc04 50% 75%, #ea4335 75% 100% );
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12l-5-5h10l-5 5zm0 0l-5 5h10l-5-5z"/></svg>') no-repeat center;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12l-5-5h10l-5 5zm0 0l-5 5h10l-5-5z"/></svg>') no-repeat center;
+    background-size: contain;
 }

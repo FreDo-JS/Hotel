@@ -1,0 +1,223 @@
+﻿/* Ogólne style dla strony */
+body.addRoomBody {
+    font-family: Arial, sans-serif;
+    background-color: #0C122E;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* Nagłówek formularza */
+h1 {
+    text-align: center;
+    color: #FFBE46;
+    margin-bottom: 20px;
+}
+
+/* Formularz dodawania pokoju */
+.formAddRoom {
+    background-color: #1A1F3B;
+    padding: 20px;
+    border-radius: 8px;
+    width: 50%;
+    margin: 0 auto;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+    .formAddRoom label {
+        display: block;
+        margin-bottom: 10px;
+        color: #FFBE46;
+        font-weight: bold;
+    }
+
+    .formAddRoom input, .formAddRoom select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #2E344D;
+        color: white;
+    }
+
+    .formAddRoom button {
+        width: 100%;
+        padding: 12px;
+        background-color: #FFBE46;
+        color: #0C122E;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+        .formAddRoom button:hover {
+            background-color: #E6A536;
+        }
+
+/* Sekcja tabeli */
+section.sectionAddRoom {
+    margin: 40px auto;
+    width: 80%;
+    background-color: #1A1F3B;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+    table th, table td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #FFBE46;
+    }
+
+    table th {
+        background-color: #2E344D;
+        color: #FFBE46;
+    }
+
+    table td {
+        background-color: #2E344D;
+        color: white;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #1A1F3B;
+    }
+
+    table tr:hover {
+        background-color: #FFBE46;
+        color: #0C122E;
+    }
+
+/* Dodatkowe style */
+hr {
+    border: 1px solid #FFBE46;
+    margin-top: 40px;
+}
+/*===================REZERWACJA ZARZADDANIE ===============*/
+
+/* Ogólne style dla strony */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0C122E;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* Nagłówek strony */
+header {
+    background-color: #FFBE46;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #0C122E;
+    margin: 0;
+}
+
+/* Główna sekcja */
+main {
+    padding: 20px;
+}
+
+h2 {
+    color: #FFBE46;
+    margin-bottom: 20px;
+}
+
+/* Stylizacja tabeli */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    /*===============SCANOWANY QR CODE================*/
+    /* Ogólne style strony */
+    
+
+{
+    font-family: Arial, sans-serif;
+    background-color: #0C122E;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* Nagłówek */
+header {
+    background-color: #FFBE46;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #0C122E;
+    margin: 0;
+}
+
+/* Główna sekcja */
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Tytuł sekcji */
+h2 {
+    color: #FFBE46;
+    margin-bottom: 20px;
+}
+
+/* Formularz do wgrywania pliku */
+form {
+    background-color: #2E344D;
+    border-radius: 8px;
+    padding: 20px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+    form label {
+        color: #FFBE46;
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    form input[type="file"] {
+        padding: 10px;
+        background-color: #1A1F3B;
+        border: 1px solid #FFBE46;
+        color: white;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+
+.button-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #FFBE46;
+    color: #0C122E;
+    width: 150px;
+    height: 60px;
+    background-color: #FFBE46;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+    .button-link:hover {
+        background-color: #E6A536;
+    }

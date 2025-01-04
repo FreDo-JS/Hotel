@@ -7,36 +7,11 @@
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
     <link rel="stylesheet" href="~/css/table.css" asp-append-version="true">
 </head>
-<body >
+<body>
     <header>
         <h1>Przegląd Bazy Danych</h1>
     </header>
-    <main class="DatabaseMain">
-       <section>
-        <div class="box">
-            <!-- Lewy panel -->
-            <aside class="leftPanel">
-                <div class="Up">
-                    <img src="~/img/ss.png" alt="Logo SS-IGMA" class="logoSigmy">
-                </div>
-                <nav class="Down">
-                    <ul>
-                        <li><a href="@Url.Action("index", "Service")" class="adminList">Dashboard</a></li>
-                        <li><a href="@Url.Action("MainMenu", "Service")" class="adminList">Main Menu</a></li>
-                        <li><a href="@Url.Action("QrCode", "Service")" class="adminList">QR Code</a></li>
-                        <li><a href="@Url.Action("Booking", "Service")" class="adminList">Booking</a></li>
-                            @if (ViewBag.UserRole == "administrator")
-                            {
-                                <li><a href="/Service/DatabaseOverview" class="adminList">Baza danych</a></li>
-                            }
-                        <li><a href="@Url.Action("Index", "Home")" class="adminList">Strona Główna</a></li>
-                    </ul>
-                </nav>
-            </aside>
-
-        </div>
-        </section>
-        <section>
+    <main>
         <section>
             <h2>Użytkownicy</h2>
             <table class="data-table" id="userTable">
@@ -79,7 +54,7 @@
                         <th>ID</th>
                         <th>Numer Pokoju</th>
                         <th>Piętro</th>
-                        <th>Status</th>
+
                         <th>Opcje</th>
                     </tr>
                 </thead>
@@ -88,9 +63,10 @@
                     {
                         <tr data-id="@room.Id">
                             <td>@room.Id</td>
-                            <td class="editable" data-column="RoomNumber">@room.RoomNumber</td>
-                            <td class="editable" data-column="Floor">@room.Floor</td>
-                            <td class="editable" data-column="Status">@room.Status</td>
+                            <td class="editable" data-column="RoomNumber">@room?.RoomNumber</td>
+                            <td class="editable" data-column="Floor">@room?.Floor</td>
+
+
                             <td>
                                 <button onclick="editRoomRow(this)">Edytuj</button>
                                 <button onclick="saveRoomRow(this)" style="display:none;">Zapisz</button>
@@ -119,13 +95,13 @@
                 <tbody>
                     @foreach (var reservation in ViewBag.Reservations)
                     {
-                        <tr data-id="@reservation.Id">
-                            <td>@reservation.Id</td>
-                            <td class="editable" data-column="RoomId">@reservation.Room.RoomNumber</td>
-                            <td>@reservation.User.Name</td>
-                            <td class="editable" data-column="CheckInDate">@reservation.CheckInDate.ToString("yyyy-MM-dd")</td>
-                            <td class="editable" data-column="CheckOutDate">@reservation.CheckOutDate.ToString("yyyy-MM-dd")</td>
-                            <td class="editable" data-column="Status">@reservation.Status</td>
+                        <tr data-id="@reservation?.Id">
+                            <td>@reservation?.Id</td>
+                            <td class="editable" data-column="RoomId">@reservation?.Room?.RoomNumber</td>
+                            <td>@reservation?.User?.Name</td>
+                            <td class="editable" data-column="CheckInDate">@reservation?.CheckInDate?.ToString("yyyy-MM-dd")</td>
+                            <td class="editable" data-column="CheckOutDate">@reservation?.CheckOutDate?.ToString("yyyy-MM-dd")</td>
+                            <td class="editable" data-column="Status">@reservation?.Status</td>
                             <td>
                                 <button onclick="editReservationRow(this)">Edytuj</button>
                                 <button onclick="saveReservationRow(this)" style="display:none;">Zapisz</button>
@@ -133,11 +109,13 @@
                         </tr>
                     }
                 </tbody>
+
+
             </table>
 
         </section>
-        </section>
     </main>
+    <a href=" @Url.Action("Index", "Service")" class="button-link">Panel Admina</a>
 </body>
 </html>
 <script>

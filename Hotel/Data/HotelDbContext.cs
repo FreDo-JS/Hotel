@@ -34,7 +34,7 @@ namespace Hotel.Data
     public class Room
     {
         public int Id { get; set; }
-        public int RoomNumber { get; set; }
+        public int? RoomNumber { get; set; }
         public int Floor { get; set; }
         public string? Status { get; set; }
         public int? ResidentId { get; set; }
