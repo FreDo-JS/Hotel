@@ -26,6 +26,7 @@
                 <p>Imię: <span>@ViewBag.FirstName</span></p>
                 <p>Nazwisko: <span>@ViewBag.LastName</span></p>
                 <p>Email: <span>@ViewBag.Email</span></p>
+                <p>Rola: <span>@ViewBag.Role</span></p>
 
                 <h2 id="historiaRezerwacji">Historia rezerwacji</h2>
                 @if (ViewBag.Reservations != null && ViewBag.Reservations.Count > 0)
@@ -52,6 +53,26 @@
                     W sprawie usług prosimy naszych użytkowników o kontakt drogą telefoniczną:
                     <strong>0700 666 21</strong>
                 </p>
+                <h2>Zmień swoją rolę</h2>
+                <form method="post" action="/UserPanel/ChangeRole">
+                    <label for="role">Wybierz nową rolę:</label>
+                    <select name="newRole" id="role" required>
+                        <option value="rezydent">Rezydent</option>
+                        <option value="pracownik">Pracownik</option>
+                        <option value="administrator">Administrator</option>
+                    </select>
+                    <button type="submit">Zmień rolę</button>
+                </form>
+
+                @if (TempData["Success"] != null)
+                {
+                    <p style="color: green;">@TempData["Success"]</p>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <p style="color: red;">@TempData["Error"]</p>
+                }
+
             </div>
         </div>
     </main>

@@ -12,7 +12,12 @@ public class AccountController : Controller
     {
         _context = context;
     }
-
+    [HttpPost]
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear(); // Wyczyszczenie sesji
+        return RedirectToAction("Index", "Home"); // Przekierowanie na stronę główną
+    }
     [HttpPost]
     public async Task<IActionResult> GoogleLogin([FromBody] TokenDto tokenDto)
     {
@@ -68,6 +73,11 @@ public class AccountController : Controller
             {
                 HttpContext.Session.SetString("UserEmail", email);
             }
+            if (!string.IsNullOrEmpty(existingUser.Role))
+            {
+                HttpContext.Session.SetString("UserRole", existingUser.Role);
+            }
+
 
             // Przechowaj wszystkie dane użytkownika w sesji w formacie JSON
             var userData = decodedToken.Claims;
@@ -83,14 +93,14 @@ public class AccountController : Controller
         }
     }
 
-
+    [RoleBasedAuthorize("administrator")]
     public IActionResult UserProfile()
     {
         // Pobierz dane użytkownika z sesji
         var userDataJson = HttpContext.Session.GetString("UserData");
         if (userDataJson == null)
         {
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("", "Login");
         }
 
         var userData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(userDataJson);
@@ -101,4 +111,5 @@ public class AccountController : Controller
     {
         public string? Token { get; set; }
     }
+
 }

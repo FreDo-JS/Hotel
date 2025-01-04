@@ -3,6 +3,7 @@ using FirebaseAdmin;
 using Hotel.Data;
 using Hotel.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Hotel.Controllers
@@ -21,6 +22,43 @@ namespace Hotel.Controllers
             _context = context;
             _firebaseAuth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDDOcI0a2y3vNwrwvzzcqHkN0p_JHUvKbI"));
         }
+        [HttpPost]
+        public async Task<IActionResult> CheckQrCode([FromBody] QrCodeDto qrCodeDto)
+        {
+            if (string.IsNullOrEmpty(qrCodeDto.QrCode))
+            {
+                return Json(new { success = false, message = "Kod QR jest wymagany." });
+            }
+
+            var reservation = await _context.Reservations
+                .Include(r => r.Room)
+                .FirstOrDefaultAsync(r => r.QRCode == qrCodeDto.QrCode);
+
+            if (reservation == null)
+            {
+                return Json(new { success = false, message = "Nie znaleziono rezerwacji dla tego kodu QR." });
+            }
+
+            return Json(new { success = true, roomNumber = reservation.Room.RoomNumber });
+        }
+
+
+        public class QrCodeDto
+        {
+            public string QrCode { get; set; }
+        }
+
+
+        [HttpGet]
+        public IActionResult ScanQrCode()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
 
         public IActionResult Index()
@@ -34,6 +72,8 @@ namespace Hotel.Controllers
                 Console.WriteLine("FirebaseApp nie zosta³o zainicjalizowane.");
                 return Content("FirebaseApp nie zosta³o zainicjalizowane.");
             }
+            var userId = HttpContext.Session.GetString("UserId");
+            ViewBag.IsLoggedIn = !string.IsNullOrEmpty(userId);
             /*if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
             {
                 // U¿ytkownik nie jest zalogowany, przekierowanie do logowania
@@ -89,6 +129,7 @@ namespace Hotel.Controllers
             if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
             {
                 return Json(new { success = false, message = "Musisz byæ zalogowany, aby dokonaæ rezerwacji." });
+
             }
 
             // Utwórz now¹ rezerwacjê bez przypisania pokoju

@@ -49,7 +49,8 @@ window.googleLogin = function () {
                     .then(data => {
                         if (data.success) {
                             // Przekierowanie na stronę główną po pomyślnym utworzeniu sesji
-                            window.location.href = '/Account/UserProfile';
+                            window.location.href = "/";
+
                         } else {
                             console.error('Błąd logowania na serwerze:', data.message);
                         }

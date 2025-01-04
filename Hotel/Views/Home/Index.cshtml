@@ -26,12 +26,21 @@
         <img src="~/img/ss.png" alt="" class="logoSigmy">
         <div class="listRight">
             <ul class="ulMain">
-<li class="mainList">
-                <a href="#glowna">PANEL ADMINA</a></li>
-                <li class="mainList"><a href="rezerwacja">QR KOD</a></li>
-                <li class="mainList"><a href="#footer">ZALOGOWANO JAKO </a><span>Gość</span></li>
+                <li class="mainList"><a href="#glowna">STRONA GŁÓWNA</a></li>
+                <li class="mainList"><a href="rezerwacja">REZERWACJA</a></li>
+                <li class="mainList"><a href="#footer">KONTAKT</a></li>
+                @if (ViewBag.IsLoggedIn)
+                {
+                    <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
+                        <button type="submit" class="logout-button">Wyloguj się</button>
+                    </form>
+                }
             </ul>
+            
+
         </div>
+       
+
     </header>
     <main class="background">
 

@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Dodanie sesji
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(20);
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -52,6 +52,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<EmailService>();
 
+
+
 var app = builder.Build();
 
 // Konfiguracja middleware
@@ -64,6 +66,12 @@ else
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+app.MapControllerRoute(
+    name: "qr",
+    pattern: "Home/ScanQrCode",
+    defaults: new { controller = "Home", action = "ScanQrCode" });
+
+
 
 app.UseSession();
 app.UseHttpsRedirection();
