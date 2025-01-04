@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Dodanie sesji
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(20);
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -51,6 +51,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Rejestracja kontrolerów
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<EmailService>();
+
 
 
 var app = builder.Build();

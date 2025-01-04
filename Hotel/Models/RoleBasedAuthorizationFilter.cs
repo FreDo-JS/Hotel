@@ -25,12 +25,35 @@ public class RoleBasedAuthorizationFilter : IActionFilter
 
         // Pobierz użytkownika z bazy danych
         var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-        if (user == null || user.Role != _requiredRole)
+        if (user == null || !RoleHierarchy.HasAccess(user.Role, _requiredRole))
         {
             context.Result = new RedirectToActionResult("AccessDenied", "Home", null);
             return;
         }
+
+        // Zaktualizuj rolę w sesji, aby odzwierciedlała aktualny stan w bazie danych
+        context.HttpContext.Session.SetString("UserRole", user.Role);
     }
 
     public void OnActionExecuted(ActionExecutedContext context) { }
+}
+
+public static class RoleHierarchy
+{
+    private static readonly Dictionary<string, int> RoleLevels = new()
+    {
+        { "rezydent", 1 },
+        { "pracownik", 2 },
+        { "administrator", 3 }
+    };
+
+    public static bool HasAccess(string userRole, string requiredRole)
+    {
+        if (!RoleLevels.ContainsKey(userRole) || !RoleLevels.ContainsKey(requiredRole))
+        {
+            return false;
+        }
+
+        return RoleLevels[userRole] >= RoleLevels[requiredRole];
+    }
 }

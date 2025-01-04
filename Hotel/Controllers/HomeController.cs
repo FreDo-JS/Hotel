@@ -72,6 +72,8 @@ namespace Hotel.Controllers
                 Console.WriteLine("FirebaseApp nie zosta³o zainicjalizowane.");
                 return Content("FirebaseApp nie zosta³o zainicjalizowane.");
             }
+            var userId = HttpContext.Session.GetString("UserId");
+            ViewBag.IsLoggedIn = !string.IsNullOrEmpty(userId);
             /*if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
             {
                 // U¿ytkownik nie jest zalogowany, przekierowanie do logowania
