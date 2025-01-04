@@ -796,17 +796,39 @@ body
 }
 
 .google {
-    padding: 10px;
-    border: 2px solid white;
-    background: rgb(26,115,232);
-    background: linear-gradient(90deg, rgba(26,115,232,1) 0%, rgba(226,58,46,1) 29%, rgba(251,191,18,1) 58%, rgba(39,152,71,1) 80%);
-    font-size: 20px;
-    color: white;
-    border-radius: 15px;
-    position:relative;
-    left:50px;
-    bottom:150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Odstęp między ikoną a tekstem */
+    width: 240px;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #757575;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+    position: relative;
+    bottom: 160px;
+    left: 40px;
 }
+.google:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    background-color: #f7f7f7;
+}
+.google-icon {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    background: conic-gradient( #4285f4 0 25%, #34a853 25% 50%, #fbbc04 50% 75%, #ea4335 75% 100% );
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12l-5-5h10l-5 5zm0 0l-5 5h10l-5-5z"/></svg>') no-repeat center;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12l-5-5h10l-5 5zm0 0l-5 5h10l-5-5z"/></svg>') no-repeat center;
+    background-size: contain;
+}
+
 .leftProfile {
     background-color: #0C122E;
 }
@@ -814,4 +836,24 @@ body
     padding: 40px;
     color: white;
     background-color: #0C122E;
+}
+
+.form-group > input
+{
+    color: black;
+    
+}
+.form-group > label
+{
+    text-align: center
+}
+.reservation-container
+{
+    position: relative;
+    left: 350px;
+    top:150px;
+}
+.reservation-button
+{
+    background-color: yellow;
 }

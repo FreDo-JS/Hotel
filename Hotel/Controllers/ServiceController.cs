@@ -14,6 +14,8 @@ using System.IO;
 using MailKit.Net.Smtp;
 using MimeKit;
 
+
+
 namespace Hotel.Controllers
 {
     public class ServiceController : Controller
