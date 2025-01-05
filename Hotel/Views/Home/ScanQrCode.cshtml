@@ -56,7 +56,7 @@
                     if (qrCode) {
                         resultMessage.textContent = `Odczytano QR kod: ${qrCode.data}`;
                         resultMessage.style.color = "green";
-                        verifyQrCode(qrCode.data); // Weryfikacja QR kodu
+                        verifyQrCode(qrCode.data); 
                     } else {
                         resultMessage.textContent = "Nie udało się odczytać QR kodu.";
                         resultMessage.style.color = "red";

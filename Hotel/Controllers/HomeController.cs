@@ -91,11 +91,11 @@ namespace Hotel.Controllers
         }
         public IActionResult TOMABYCGLOWNA()
         {
-            // Pobranie danych u¿ytkownika z sesji
+            
             string userName = HttpContext.Session.GetString("UserName") ?? "Goœæ";
             string userSurname = HttpContext.Session.GetString("UserEmail") ?? "";
 
-            // Przekazanie danych do widoku
+            
             ViewBag.UserName = userName;
             ViewBag.UserSurname = userSurname;
 
@@ -124,7 +124,7 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Data wyjazdu musi byæ póŸniejsza ni¿ data przyjazdu." });
             }
 
-            // Pobierz ID u¿ytkownika z sesji
+            
             var userIdString = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
             {
@@ -132,7 +132,7 @@ namespace Hotel.Controllers
 
             }
 
-            // Utwórz now¹ rezerwacjê bez przypisania pokoju
+            
             var newReservation = new Reservation
             {
                 UserId = userId,
@@ -141,8 +141,8 @@ namespace Hotel.Controllers
                 CheckOutDate = reservationDto.CheckOutDate,
                 Status = "niepotwierdzona",
                 CreatedAt = DateTime.Now,
-                QRCode = null, // Kod QR nie jest generowany na tym etapie
-                RoomId = null  // Nie przypisujemy pokoju
+                QRCode = null, 
+                RoomId = null  
             };
 
             _context.Reservations.Add(newReservation);

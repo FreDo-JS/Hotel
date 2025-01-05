@@ -126,7 +126,7 @@
 
                 const data = await response.json();
                 alert(data.message);
-                fetchPendingReservations(); // Reload reservations
+                fetchPendingReservations(); 
             }
 
             document.addEventListener("DOMContentLoaded", fetchPendingReservations);

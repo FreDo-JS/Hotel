@@ -17,7 +17,7 @@ namespace Hotel.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Pobierz UserId z sesji
+            
             var userIdString = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
             {
@@ -25,7 +25,6 @@ namespace Hotel.Controllers
                 return RedirectToAction("", "login");
             }
 
-            // Pobierz użytkownika z bazy danych
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
@@ -41,7 +40,7 @@ namespace Hotel.Controllers
             ViewBag.Email = user.Email;
 
 
-            // Pobierz historię rezerwacji użytkownika
+            
             var reservations = await _context.Reservations
                 .Where(r => r.UserId == userId)
                 .Include(r => r.Room)
@@ -62,7 +61,7 @@ namespace Hotel.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangeRole(string newRole)
         {
-            // Pobierz UserId z sesji
+            
             var userIdString = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
             {
@@ -70,7 +69,7 @@ namespace Hotel.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Pobierz użytkownika z bazy danych
+            
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
@@ -78,7 +77,7 @@ namespace Hotel.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Sprawdź, czy rola jest poprawna
+            
             if (newRole == "rezydent" || newRole == "pracownik" || newRole == "administrator")
             {
                 user.Role = newRole;

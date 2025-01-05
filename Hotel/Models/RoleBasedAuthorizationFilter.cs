@@ -15,7 +15,7 @@ public class RoleBasedAuthorizationFilter : IActionFilter
 
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        // Pobierz UserId z sesji
+        
         var userIdString = context.HttpContext.Session.GetString("UserId");
         if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
         {
@@ -23,7 +23,7 @@ public class RoleBasedAuthorizationFilter : IActionFilter
             return;
         }
 
-        // Pobierz użytkownika z bazy danych
+        
         var user = _context.Users.FirstOrDefault(u => u.Id == userId);
         if (user == null || !RoleHierarchy.HasAccess(user.Role, _requiredRole))
         {
@@ -31,7 +31,7 @@ public class RoleBasedAuthorizationFilter : IActionFilter
             return;
         }
 
-        // Zaktualizuj rolę w sesji, aby odzwierciedlała aktualny stan w bazie danych
+        
         context.HttpContext.Session.SetString("UserRole", user.Role);
     }
 

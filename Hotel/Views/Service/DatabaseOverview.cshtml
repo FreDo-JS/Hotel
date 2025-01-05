@@ -122,11 +122,11 @@
     function editRow(button) {
         const row = button.closest("tr");
         row.querySelectorAll(".editable").forEach(cell => {
-            const column = cell.getAttribute("data-column"); // Dodajemy atrybut do określenia pola
+            const column = cell.getAttribute("data-column"); 
             const input = document.createElement("input");
             input.type = "text";
             input.value = cell.textContent.trim();
-            input.setAttribute("name", column); // Ustawiamy nazwę, która później będzie kluczem
+            input.setAttribute("name", column); 
             cell.textContent = "";
             cell.appendChild(input);
         });
@@ -139,7 +139,7 @@
         const id = row.getAttribute("data-id");
         const updatedData = {};
 
-        // Pobierz wartości z pól edycji
+        
         row.querySelectorAll(".editable").forEach(cell => {
             const input = cell.querySelector("input");
             const column = input.getAttribute("name");
@@ -149,7 +149,7 @@
 
         console.log("Dane do zapisania:", updatedData);
 
-        // Wyślij dane do serwera
+        //Wysyłanie danych do serwera
         try {
             const response = await fetch(`/Service/UpdateUser/${id}`, {
                 method: "POST",

@@ -33,7 +33,7 @@ namespace Hotel.Controllers
         {
             
             var rooms = await _context.Rooms.Select(r => new { r.Id, r.RoomNumber }).ToListAsync();
-            ViewBag.Rooms = rooms; // Przekazanie listy pokoi do widoku
+            ViewBag.Rooms = rooms; 
             ViewBag.UserRole = HttpContext.Session.GetString("UserRole");
 
             return View();
@@ -80,7 +80,7 @@ namespace Hotel.Controllers
             {
                 _context.Rooms.Add(room);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(DodajPokoj)); // Powrót do widoku po dodaniu
+                return RedirectToAction(nameof(DodajPokoj)); 
             }
 
             var rooms = await _context.Rooms.ToListAsync();
@@ -95,7 +95,7 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Data wyjazdu musi być późniejsza niż data przyjazdu." });
             }
 
-            // Pobierz ID pokoju na podstawie numeru pokoju
+            
             var room = await _context.Rooms.FirstOrDefaultAsync(r => r.RoomNumber == reservationDto.RoomNumber);
             if (room == null)
             {
@@ -145,7 +145,7 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Data wyjazdu musi być późniejsza niż data przyjazdu." });
             }
 
-            // Pobierz wszystkie pokoje na danym piętrze lub wszystkie piętra
+            
             var roomsQuery = _context.Rooms.AsQueryable();
             if (!string.IsNullOrEmpty(request.Floor))
             {
@@ -327,7 +327,7 @@ namespace Hotel.Controllers
                 {
                     Console.WriteLine($"QRCodeData: {qrCodeData}");
 
-                    // Generowanie obrazu kodu QR na podstawie danych
+                    
                     byte[] qrCodeBytes;
                     using (var qrGenerator = new QRCodeGenerator())
                     {
@@ -354,7 +354,7 @@ namespace Hotel.Controllers
                         HtmlBody = "<p>W załączniku znajdziesz swój kod QR. Użyj go do otwarcia drzwi swojego pokoju.</p>"
                     };
 
-                    // Dołącz kod QR jako załącznik
+                   
                     bodyBuilder.Attachments.Add("QRCode.png", qrCodeBytes, new ContentType("image", "png"));
                     message.Body = bodyBuilder.ToMessageBody();
 
@@ -362,22 +362,22 @@ namespace Hotel.Controllers
                     {
                         try
                         {
-                            // Łączenie z serwerem SMTP
+                            
                             await client.ConnectAsync(
                                 _configuration["EmailSettings:SmtpServer"],
                                 int.Parse(_configuration["EmailSettings:SmtpPort"]),
-                                MailKit.Security.SecureSocketOptions.SslOnConnect); // SSL dla portu 465
+                                MailKit.Security.SecureSocketOptions.SslOnConnect); 
 
-                            // Uwierzytelnianie
+                            
                             await client.AuthenticateAsync(
                                 _configuration["EmailSettings:SenderEmail"],
                                 _configuration["EmailSettings:SenderPassword"]);
 
-                            // Wysyłanie e-maila
+                            
                             await client.SendAsync(message);
                             Console.WriteLine("E-mail został wysłany pomyślnie.");
 
-                            // Rozłączanie
+                            
                             await client.DisconnectAsync(true);
                         }
                         catch (Exception ex)
@@ -484,12 +484,12 @@ namespace Hotel.Controllers
         [HttpGet]
         public async Task<IActionResult> DatabaseOverview()
         {
-            // Pobierz dane z tabel
+            
             var users = await _context.Users.ToListAsync();
             var rooms = await _context.Rooms.ToListAsync();
             var reservations = await _context.Reservations.Include(r => r.User).Include(r => r.Room).ToListAsync();
 
-            // Przekaż dane do widoku
+           
             ViewBag.Users = users;
             ViewBag.Rooms = rooms;
             ViewBag.Reservations = reservations;
@@ -505,7 +505,7 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Nie znaleziono użytkownika." });
             }
 
-            // Sprawdzamy i aktualizujemy właściwości
+            
             user.Name = string.IsNullOrWhiteSpace(updatedUser.Name) ? user.Name : updatedUser.Name;
             user.Email = string.IsNullOrWhiteSpace(updatedUser.Email) ? user.Email : updatedUser.Email;
             user.Role = string.IsNullOrWhiteSpace(updatedUser.Role) ? user.Role : updatedUser.Role;

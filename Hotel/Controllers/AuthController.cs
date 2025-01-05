@@ -21,14 +21,14 @@ public class AuthController : Controller
     {
         try
         {
-            // Weryfikacja tokena JWT
+            
             FirebaseToken decodedToken = await FirebaseAdminAuth.DefaultInstance.VerifyIdTokenAsync(idToken);
 
             string uid = decodedToken.Uid;
             string email = decodedToken.Claims["email"]?.ToString() ?? "";
             string name = decodedToken.Claims["name"]?.ToString() ?? "";
 
-            // Sprawdzenie, czy użytkownik istnieje w MySQL
+            
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.FirebaseUid == uid);
             if (existingUser == null)
             {

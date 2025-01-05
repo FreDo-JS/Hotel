@@ -6,20 +6,20 @@ namespace Hotel.Data
     {
         public HotelDbContext(DbContextOptions<HotelDbContext> options) : base(options) { }
 
-        // Tabela użytkowników
+        
         public DbSet<User> Users { get; set; }
 
-        // Tabela pokoi
+       
         public DbSet<Room> Rooms { get; set; }
 
-        // Tabela statystyk pokoi
+        
         public DbSet<RoomStatistic> RoomStatistics { get; set; }
 
         public DbSet<Reservation> Reservations { get; set; } // Dodanie tabeli rezerwacji
        
     }
 
-    // Model dla tabeli Users
+    
     public class User
     {
         public int Id { get; set; }
@@ -30,7 +30,7 @@ namespace Hotel.Data
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 
-    // Model dla tabeli Rooms
+    
     public class Room
     {
         public int Id { get; set; }
@@ -41,7 +41,6 @@ namespace Hotel.Data
         public User? Resident { get; set; }
     }
 
-    // Model dla tabeli RoomStatistics
     public class RoomStatistic
     {
         public int Id { get; set; }

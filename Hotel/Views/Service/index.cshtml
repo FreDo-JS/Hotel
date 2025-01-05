@@ -11,7 +11,7 @@
 <body class="adminPanel">
     <main class="main-container">
         <div class="box">
-            <!-- Lewy panel -->
+            
             <aside class="leftPanel">
                 <div class="Up">
                     <img src="~/img/ss.png" alt="Logo SS-IGMA" class="logoSigmy">
@@ -34,12 +34,12 @@
                 </nav>
             </aside>
 
-            <!-- Prawy panel -->
+            
             <section class="rightPanel">
 
                 <div class="leftPanelService">
                     <h2>Sprawdzenie Pokoi</h2>
-                    <!-- Formularz dostępności -->
+                    
                     <form id="checkAvailabilityForm" class="checkRooms">
                         <div class="flex">
                             <div class="inputFlex">
@@ -73,7 +73,7 @@
 
 
 
-                    <!-- Sekcja rezerwacji -->
+                    
                     <section class="reservation">
                         <h2>Rezerwacja</h2>
                         <form id="reservationForm" class="checkReservation">
@@ -132,11 +132,11 @@
 
 
 
-            <!-- Lista pokoi -->
+            
             <div class="roomsCheckRight">
 
                 <h2>Sprawdzanie QR CODE</h2>
-                <!-- Sekcja kodów QR -->
+                
                 <div class="QR">
                     <div class="qRLeftSide">
                         <label for="qrReservationId">ID Rezerwacji</label>
@@ -152,13 +152,13 @@
                         <button class="downloadQR" onclick="downloadQRCode()">POBIERZ KOD QR</button>
                         <button class="sendQR" onclick="sendQrCode()">WYŚLIJ KOD QR</button>
                         <label for="qrEmail">Adres mailowy</label>
-                        <input type="email" id="qrEmail" class="qrInput" placeholder="Wprowadź adres e-mail">
+                        
                     </div>
                 </div>
 
 
             </div>
-            </section>
+            
         </div>
 
     </main>
@@ -174,14 +174,14 @@
         const checkOutDate = document.getElementById("inputDataWyjazdu").value;
         const messageDiv = document.getElementById("reservationMessage");
 
-        // Walidacja danych na kliencie
+        
         if (!userId || !lastName || !roomNumber || !checkInDate || !checkOutDate) {
             messageDiv.textContent = "Wszystkie pola są wymagane.";
             messageDiv.style.color = "red";
             return;
         }
 
-        // Wysyłanie danych do kontrolera
+        
         try {
             const response = await fetch("/Service/CreateReservation", {
                 method: "POST",
