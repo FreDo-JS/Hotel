@@ -39,7 +39,7 @@ namespace Hotel.Controllers
                 return Json(new { success = false, message = "Nie znaleziono rezerwacji dla tego kodu QR." });
             }
 
-            return Json(new { success = true, roomNumber = reservation.Room.RoomNumber });
+            return Json(new { success = true, roomNumber = reservation.Room?.RoomNumber });
         }
 
 
