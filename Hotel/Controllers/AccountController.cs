@@ -73,7 +73,7 @@ public class AccountController : Controller
             {
                 HttpContext.Session.SetString("UserEmail", email);
             }
-            if (!string.IsNullOrEmpty(existingUser.Role))
+            if (!string.IsNullOrEmpty(existingUser?.Role))
             {
                 HttpContext.Session.SetString("UserRole", existingUser.Role);
             }
