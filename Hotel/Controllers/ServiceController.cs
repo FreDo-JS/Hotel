@@ -84,6 +84,8 @@ namespace Hotel.Controllers
             {
                 return Json(new { success = false, message = "Pokój jest zajęty w wybranym terminie." });
             }
+            // Wygeneruj losowy kod QR
+            var qrCode = GenerateRandomCode();
 
             // Utwórz nową rezerwację
             var reservation = new Reservation
@@ -94,7 +96,8 @@ namespace Hotel.Controllers
                 CheckInDate = reservationDto.CheckInDate,
                 CheckOutDate = reservationDto.CheckOutDate,
                 Status = "potwierdzona",
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                QRCode = qrCode
             };
 
             _context.Reservations.Add(reservation);
