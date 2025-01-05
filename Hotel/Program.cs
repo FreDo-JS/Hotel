@@ -8,7 +8,7 @@ using static Hotel.Controllers.ServiceController;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Dodanie sesji
+// Sesja 10 min
 builder.Services.AddSession(options =>
 {
 	options.IdleTimeout = TimeSpan.FromMinutes(10);
@@ -16,7 +16,7 @@ builder.Services.AddSession(options =>
 	options.Cookie.IsEssential = true;
 });
 
-// Inicjalizacja Firebase
+// Inicjalizacja Firebase ale w zasadzie korzystamy tylko z autha
 var keyFilePath = Path.Combine(builder.Environment.ContentRootPath, "Config", "hotelssigma-firebase-adminsdk-5k6yn-f40a7fbbd6.json");
 if (File.Exists(keyFilePath))
 {
@@ -30,18 +30,17 @@ else
 	throw new FileNotFoundException($"Plik klucza Firebase nie zosta³ znaleziony: {keyFilePath}");
 }
 
-// Konfiguracja MySQL
+// Konfiguracja MySQL z appsettings
 var connectionString = builder.Configuration.GetConnectionString("MySqlConnection")
 	?? throw new InvalidOperationException("Connection string 'MySqlConnection' not found.");
 
-// Sprawdzenie i automatyczne utworzenie bazy danych
+
 EnsureDatabaseExists(connectionString);
 
-// Rejestracja DbContext z u¿yciem MySQL
+
 builder.Services.AddDbContext<HotelDbContext>(options =>
 	options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-// Rejestracja to¿samoœci (Identity) z baz¹ danych
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 	.AddEntityFrameworkStores<HotelDbContext>();
 
@@ -51,7 +50,6 @@ builder.Services.AddTransient<EmailService>();
 
 var app = builder.Build();
 
-// Konfiguracja middleware
 if (app.Environment.IsDevelopment())
 {
 	app.UseDeveloperExceptionPage();
@@ -81,7 +79,7 @@ app.MapControllerRoute(
 
 app.Run();
 
-// Funkcja do sprawdzenia i automatycznego utworzenia bazy danych
+// automat do tworzenia bazy do testów
 void EnsureDatabaseExists(string connectionString)
 {
 	try
@@ -89,7 +87,7 @@ void EnsureDatabaseExists(string connectionString)
 		var builder = new MySqlConnectionStringBuilder(connectionString);
 		var databaseName = builder.Database;
 
-		builder.Database = null; // Usuniêcie nazwy bazy danych, aby po³¹czyæ siê z serwerem MySQL
+		builder.Database = null; 
 		using var connection = new MySqlConnection(builder.ConnectionString);
 		connection.Open();
 
